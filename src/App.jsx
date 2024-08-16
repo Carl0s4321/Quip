@@ -1,17 +1,19 @@
 import { BrowserRouter } from 'react-router-dom'
 import './App.css'
-import {About, Hero, Navbar, Testimonials,} from './components'
+import {About, Footer, Hero, Navbar, Subscribe, Testimonials,} from './components'
 
 function App() {
   return (
     <BrowserRouter>
-      <Navbar/>
-      <Hero/>
-      <About/>
-      <Testimonials/>
-
+      <div className="relative mt-14">
+        <Navbar />
+        <Hero />
+        <About />
+        <Testimonials />
+        <Subscribe/>
+        <Footer/>
+      </div>
     </BrowserRouter>
-  )
+  );
 }
-
 export default App
