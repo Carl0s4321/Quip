@@ -43,3 +43,16 @@
   background-size: 200% 200%;
   animation: gradientAnimation 8s ease infinite;
 }
+
+@keyframes waveMove {
+  0% {
+      transform: translateX(0);
+  }
+  100% {
+      transform: translateX(-50%);
+  }
+}
+
+.animated-wave {
+  animation: waveMove 10s linear infinite;
+}
