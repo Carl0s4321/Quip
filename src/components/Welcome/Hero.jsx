@@ -35,7 +35,6 @@ const Hero = () =>{
                     <img src={heropic} alt="Hero" className="max-w-[400px] sm:max-w-[500px] lg:max-w-[520px] xl:max-w-[630px] object-cover" />
                 </div>
             </div>
-
             <img src={isMobile ? wavemobile : wave} className='absolute bottom-0 w-full  z-0'/>
         </div>
     )
