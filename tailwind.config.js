@@ -7,6 +7,10 @@ module.exports = {
   mode: "jit",
   theme: {
     extend: {
+      backgroundImage: {
+        'custom-testimonial-gradient': 'linear-gradient(60deg, rgb(101, 84, 192), rgb(249, 156, 219))',
+        'custom-overall-gradient': 'linear-gradient(0deg, rgb(255, 255, 255), rgb(230, 252, 255), rgb(255, 255, 255))'
+      },
       colors: {
         primary: "#050816",
         secondary: "#aaa6c3",

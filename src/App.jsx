@@ -9,8 +9,10 @@ function App() {
         <Navbar />
         <Hero />
         <About />
-        <Testimonials />
-        <Subscribe/>
+        <div className='bg-custom-overall-gradient'>
+          <Testimonials />
+          <Subscribe/>
+        </div>
         <Footer/>
       </div>
     </BrowserRouter>
