@@ -40,12 +40,12 @@ const CardItem = ({ data, isActive, onMouseEnter, index }) =>{
 
 const About = () =>{
     const width = window.innerWidth;
-    const [activeCard, setActiveCard] = useState(null); // Default active card index
+    const [activeCard, setActiveCard] = useState(null); 
 
     useEffect(() => {
       const cardsElements = document.querySelectorAll(".card-item");
   
-      // Remove previous active state and add the active class to the new card
+      
       cardsElements.forEach((card, index) => {
         card.classList.remove('active');
         if (index === activeCard) {

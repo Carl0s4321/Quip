@@ -1,6 +1,7 @@
 import { heropic, wave, wavemobile} from "../../assets";
 import { styles } from "../../styles";
 import { useState, useEffect } from "react";
+import { FormButton } from "..";
 import SignIn from "./SignIn"
 import SignUp from "./SignUp"
 
@@ -24,12 +25,7 @@ const Hero = () =>{
                 <div className="flex flex-col md:min-w-[500px] max-w-[688px] lg:pt-0 pt-32 px-8">
                     <h1 className={`${styles.heroHeadText} inline-block text-center md:text-left mb-2`}>Quip brings all your tasks, teammates, and tools together</h1>
                     <p className={`${styles.heroSubText} text-center md:text-left mb-6`}>Keep everything in the same place—even if your team isn’t.</p>
-                    <div className="flex flex-row md:justify-start justify-center gap-5 mb-6">
-                        <input type="email" placeholder="Email" className="hidden sm:flex rounded-lg pl-5 max-w-72 flex-1"/>
-                        <button className="custom-button w-full sm:w-fit">
-                            Get Started
-                        </button>
-                    </div>
+                    <FormButton/>
                 </div>
                 <div className="w-full flex justify-center relative z-10">
                     <img src={heropic} alt="Hero" className="max-w-[400px] sm:max-w-[500px] lg:max-w-[520px] xl:max-w-[630px] object-cover" />

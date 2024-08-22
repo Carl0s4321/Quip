@@ -5,6 +5,7 @@ import SignIn from './Welcome/SignIn';
 import SignUp from './Welcome/SignUp';
 import Subscribe from './Welcome/Subscribe';
 import Testimonials from './Welcome/Testimonials';
+import FormButton from './Welcome/FormButton';
 import Navbar from './Navbar';
 
 export {
@@ -16,4 +17,5 @@ export {
     SignIn,
     SignUp,
     Navbar,
+    FormButton,
 };
