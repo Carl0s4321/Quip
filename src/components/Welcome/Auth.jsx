@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { account, ID } from '../../lib/appwrite';
+import { useLocation } from 'react-router-dom';
 
 const Auth = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -12,7 +13,11 @@ const Auth = () => {
     setLoggedInUser(await account.get());
   }
 
-  const [isSignUp, setIsSignUp] = useState(true);
+  const location = useLocation();
+  const {showSignUp} = location.state || {showSignUp: false}
+  console.log("showLogin:" , showSignUp)
+  const [isSignUp, setIsSignUp] = useState(showSignUp);
+
 
   return (
     <div className='flex justify-center items-center h-[85vh] flex-col'>

@@ -9,6 +9,9 @@ import brandsMobile from './logos-3x3-visa-coinbase-john-deere-zoom-grand-hyatt-
 import footerLeft from './BigSwingFooterHeroGraphic__Left.svg'
 import footerRight from './BigSwingFooterHeroGraphic__Right.svg'
 
+import authLeft from './authLeft.svg'
+import authRight from './authRight.svg'
+
 import folder from './icon-content-folder_2x.png'
 import megaphone from './icon-object-megaphone_2x.png'
 import leaf from './icon-object-leaf_2x.png'
@@ -32,4 +35,6 @@ export {
     book,
     footerLeft,
     footerRight,
+    authLeft,
+    authRight,
 }

@@ -13,7 +13,7 @@ const Footer = () =>{
     <div className="px-4 mx-20 md:mx-auto sm:px-20 lg:px-8 max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-y-5 gap-x-8">
             <div className="w-fit">
-                <img className="w-auto h-9" src={logoWhite} alt={logoWhite} />
+                <a href="#"><img className="w-auto h-9 cursor-pointer" src={logoWhite} alt={logoWhite} /></a>
 
                 <ul className="flex items-center mt-4 justify-between">
                     <li>
@@ -51,7 +51,7 @@ const Footer = () =>{
 
             {footers.map((footer, index) => (
                 <div key={index}>  
-                <div  className="text-white hover:bg-white/25 transition-all duration-200 flex flex-col justify-center rounded-lg pl-0 md:pl-4 cursor-pointer">
+                <div  className="text-white w-full h-full hover:bg-white/25 transition-all duration-200 flex flex-col justify-center rounded-lg pl-0 md:px-4 md:py-1 cursor-pointer">
                     <p className="text-sm font-semibold">{footer.title}</p>
                     <p className="mt-4 text-xs">{footer.subtitle}</p>
                 </div>
