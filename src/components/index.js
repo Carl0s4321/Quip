@@ -8,6 +8,8 @@ import Testimonials from './Welcome/Testimonials';
 import FormButton from './Welcome/FormButton';
 import Navbar from './Navbar';
 
+import Home from './Home';
+
 export {
     Hero,
     About,
@@ -18,4 +20,5 @@ export {
     SignUp,
     Navbar,
     FormButton,
+    Home,
 };

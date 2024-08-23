@@ -83,7 +83,7 @@
 }
 
 .container button{
-  background-color: #512da8;
+  background-color: #2059f8;
   color: #fff;
   font-size: 12px;
   padding: 10px 45px;
@@ -94,11 +94,16 @@
   text-transform: uppercase;
   margin-top: 10px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .container button.hidden{
   background-color: transparent;
   border-color: #fff;
+}
+
+.container button:hover{
+  background-color: #1839a7;
 }
 
 .container form{
@@ -187,13 +192,13 @@
   height: 100%;
   overflow: hidden;
   transition: all 0.6s ease-in-out;
-  border-radius: 150px 0 0 100px;
+  border-radius: 50px 0 0 50px;
   z-index: 1000;
 }
 
 .container.active .toggle-container{
   transform: translateX(-100%);
-  border-radius: 0 150px 100px 0;
+  border-radius: 0 50px 50px 0;
 }
 
 .toggle{

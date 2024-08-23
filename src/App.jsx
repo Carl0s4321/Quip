@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes, } from 'react-router-dom';
 import './App.css'
-import {About, Footer, Hero, Navbar, Subscribe, Testimonials, Auth} from './components'
+import {About, Footer, Hero, Navbar, Subscribe, Testimonials, Auth, Home} from './components'
 
 function App() {
   return (
@@ -20,6 +20,7 @@ function App() {
           </>
         } />
         <Route path="/auth" element={<Auth />} /> {/* only render auth component on /auth */}
+        <Route path="/home" element={<Home />} />
       </Routes>
     </div>
     </Router>
