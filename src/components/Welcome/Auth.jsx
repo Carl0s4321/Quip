@@ -3,8 +3,13 @@ import { account, ID } from '../../lib/appwrite';
 import { useLocation } from 'react-router-dom';
 
 const Auth = () => {
+  const location = useLocation();
+  const { haveEmail } = location.state || {};
+  const {showSignUp} = location.state || {showSignUp: false}
+  const [isSignUp, setIsSignUp] = useState(showSignUp);
+
   const [loggedInUser, setLoggedInUser] = useState(null);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(haveEmail || '');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
 
@@ -12,12 +17,6 @@ const Auth = () => {
     await account.createEmailPasswordSession(email, password);
     setLoggedInUser(await account.get());
   }
-
-  const location = useLocation();
-  const {showSignUp} = location.state || {showSignUp: false}
-  console.log("showLogin:" , showSignUp)
-  const [isSignUp, setIsSignUp] = useState(showSignUp);
-
 
   return (
     <div className='flex justify-center items-center h-[85vh] flex-col'>
