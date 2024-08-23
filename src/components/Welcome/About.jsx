@@ -20,8 +20,8 @@ const CardItem = ({ data, isActive, onMouseEnter, index }) =>{
         }`}
         onMouseEnter={onMouseEnter}
       >
-            <div style={{borderColor: data.color}} className={`transition-all duration-500 ease-in-out ${isActive? "flex-row items-start h-auto":"flex-col items-center h-full"} border-4 rounded-2xl container flex w-full`}>
-              <div className={`transition-all duration-200 ease-in-out ${isActive? "w-20 h-20": "w-10 h-10"} flex items-center justify-center wrapper m-5`}>
+            <div style={{borderColor: data.color}} className={`transition-all duration-500 ease-in-out ${isActive? "flex-row items-start h-auto":"flex-col items-center h-full"} border-4 rounded-2xl flex w-full`}>
+              <div className={`transition-all duration-200 ease-in-out ${isActive? "w-20 h-20": "w-10 h-10"} flex items-center justify-center m-5`}>
                 <img className="w-full object-cover" src={`${data.icon}`}/>
               </div>
               <div style={{backgroundColor: data.color}} className={`${isActive? "flex items-center":""}  h-full w-full`}>

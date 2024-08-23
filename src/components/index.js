@@ -1,7 +1,7 @@
 import Hero from './Welcome/Hero';
 import About from './Welcome/About';
 import Footer from './Welcome/Footer';
-import SignIn from './Welcome/SignIn';
+import Auth from './Welcome/Auth';
 import SignUp from './Welcome/SignUp';
 import Subscribe from './Welcome/Subscribe';
 import Testimonials from './Welcome/Testimonials';
@@ -14,7 +14,7 @@ export {
     Testimonials,
     Subscribe,
     Footer,
-    SignIn,
+    Auth,
     SignUp,
     Navbar,
     FormButton,

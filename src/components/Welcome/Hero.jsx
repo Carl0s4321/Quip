@@ -2,11 +2,16 @@ import { heropic, wave, wavemobile} from "../../assets";
 import { styles } from "../../styles";
 import { useState, useEffect } from "react";
 import { FormButton } from "..";
-import SignIn from "./SignIn"
-import SignUp from "./SignUp"
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () =>{
     const [isMobile, setIsMobile] = useState(false);
+
+    const navigate = useNavigate();
+
+    const handleAuthClick = () => {
+      navigate('/auth');
+    };
 
     useEffect(() => {
         const handleResize = () => {
@@ -25,7 +30,7 @@ const Hero = () =>{
                 <div className="flex flex-col md:min-w-[500px] max-w-[688px] lg:pt-0 pt-32 px-8">
                     <h1 className={`${styles.heroHeadText} inline-block text-center md:text-left mb-2`}>Quip brings all your tasks, teammates, and tools together</h1>
                     <p className={`${styles.heroSubText} text-center md:text-left mb-6`}>Keep everything in the same place—even if your team isn’t.</p>
-                    <FormButton/>
+                    <FormButton handleClick={handleAuthClick}/>
                 </div>
                 <div className="w-full flex justify-center relative z-10">
                     <img src={heropic} alt="Hero" className="max-w-[400px] sm:max-w-[500px] lg:max-w-[520px] xl:max-w-[630px] object-cover" />

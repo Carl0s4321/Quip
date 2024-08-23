@@ -71,12 +71,12 @@ const testimonials = [
     },
     {
       title:"Jobs",
-      subtitle:"Learn about open roles on the Trello team.",
+      subtitle:"Learn about open roles on the Quip team.",
       link:"#",
     },
     {
       title:"Apps",
-      subtitle:"Download the Trello App for your Desktop or Mobile devices.",
+      subtitle:"Download the Quip App for your Desktop or Mobile devices.",
       link:"#",
     },
     {
