@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { account, ID } from '../../lib/appwrite';
 import { useLocation, useNavigate} from 'react-router-dom';
 import useUserStore from '../../store/userStore';
+import { AppwriteException } from 'appwrite';
 
 const Auth = () => {
   const location = useLocation();
@@ -17,9 +18,53 @@ const Auth = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
 
-  async function login(email, password) {
-    await account.createEmailPasswordSession(email, password);
-    setUser(await account.get());
+    
+  const login = async(email, password) => {
+    try{
+      await account.createEmailPasswordSession(email, password);
+      setUser(await account.get());
+    } catch(error){
+      throw error;
+    }
+  }
+
+  const handleLogIn = async() => {
+    try{
+      await login(email, password);
+      navigate('/home');  
+    }catch(error){
+      handleAppwriteException(error);
+    }
+  }
+
+  const handleSignUp = async() => {
+    try{
+      await account.create(ID.unique(), email, password, name);
+      await login(email, password);
+      navigate('/home');  
+    }catch(error){
+      handleAppwriteException(error);
+    }
+  }
+
+  const handleAppwriteException = (error) =>{
+    if(error instanceof AppwriteException){
+      switch (error.code) {
+        case 401:
+          alert('Unauthorized. Please check your email and password.');
+          break;
+        case 409:
+          alert('Conflict. The account already exists.');
+          break;
+        case 400:
+          alert('Bad Request. Please ensure all fields are filled out correctly.');
+          break;
+        default:
+          alert(`Error: ${error.message}`);
+      }
+    }else{
+      alert('An unexpected error occurred. Please try again.');
+    }
   }
 
   return (
@@ -41,12 +86,7 @@ const Auth = () => {
             <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required/>
             <button
                 type="button"
-                onClick={async () => {
-                    await account.create(ID.unique(), email, password, name);
-                    login(email, password);
-                    navigate('/home'); 
-                }}
-                >Sign Up</button>
+                onClick={handleSignUp}>Sign Up</button>
           </form>
         ) : (
           <form>
@@ -63,11 +103,7 @@ const Auth = () => {
             {/* <a href="#">Forget Your Password?</a> */}
             <button 
               type="button" 
-              onClick={() => {
-                login(email, password);
-                navigate('/home');
-              }}
-              >Log In</button>
+              onClick={handleLogIn}>Log In</button>
           </form>
         )}
       </div>
