@@ -8,7 +8,7 @@ function App() {
       <Routes>
         <Route path="/" element={
           <>
-            <Navbar/>
+            <Navbar isHome={false}/>
             <div className="relative mt-14">
             <Hero />
             <About />

@@ -6,6 +6,7 @@ import { AppwriteException } from 'appwrite';
 import { authLeft, authRight } from '../../assets';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { PropagateLoader } from 'react-spinners';
 
 const Auth = () => {
   const location = useLocation();
@@ -14,6 +15,7 @@ const Auth = () => {
   const { haveEmail } = location.state || {};
   const {showSignUp} = location.state || {showSignUp: false}
   const [isSignUp, setIsSignUp] = useState(showSignUp);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false); // Loading state
 
@@ -32,21 +34,27 @@ const Auth = () => {
   }
 
   const handleLogIn = async() => {
+    setIsSubmitting(true);
     try{
       await login(email, password);
       navigate('/home');  
     }catch(error){
       handleAppwriteException(error);
+    }finally{
+      setIsSubmitting(false);
     }
   }
 
   const handleSignUp = async() => {
+    setIsSubmitting(true);
     try{
       await account.create(ID.unique(), email, password, name);
       await login(email, password);
       navigate('/home');  
     }catch(error){
       handleAppwriteException(error);
+    }finally{
+      setIsSubmitting(false);
     }
   }
 
@@ -70,12 +78,16 @@ const Auth = () => {
     }
   }
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleLogIn();
+    }
+  };
+
   return (
     <>
     <FontAwesomeIcon icon={faArrowLeft} className='p-5 cursor-pointer'onClick={()=>{navigate('/')}}/>
     <div className='flex justify-center items-center h-[85vh]'>
-      {/* <div >
-      </div> */}
       <div className='w-1/4 h-1/4 absolute left-0'>
         <img src={authLeft}/>
       </div>
@@ -84,13 +96,6 @@ const Auth = () => {
           {isSignUp ? (
             <form>
               <h1 className='text-2xl font-semibold'>Create Account</h1>
-              {/* <div className="social-icons">
-                <a href="#" className="icon"><i className="fa-brands fa-google-plus-g"></i></a>
-                <a href="#" className="icon"><i className="fa-brands fa-facebook-f"></i></a>
-                <a href="#" className="icon"><i className="fa-brands fa-github"></i></a>
-                <a href="#" className="icon"><i className="fa-brands fa-linkedin-in"></i></a>
-              </div>
-              <span>or use your email for registration</span> */}
               <input type="text" placeholder="Name" value={name} onChange={e => setName(e.target.value)} required/>
               <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required/>
               <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required/>
@@ -101,19 +106,13 @@ const Auth = () => {
           ) : (
             <form>
               <h1  className='text-2xl font-semibold'>Log In</h1>
-              {/* <div className="social-icons">
-                <a href="#" className="icon"><i className="fa-brands fa-google-plus-g"></i></a>
-                <a href="#" className="icon"><i className="fa-brands fa-facebook-f"></i></a>
-                <a href="#" className="icon"><i className="fa-brands fa-github"></i></a>
-                <a href="#" className="icon"><i className="fa-brands fa-linkedin-in"></i></a>
-              </div>
-              <span>or use your email password</span> */}
-              <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required/>
-              <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required/>
-              {/* <a href="#">Forget Your Password?</a> */}
+              <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required onKeyDown={handleKeyDown}/>
+              <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required onKeyDown={handleKeyDown}/>
               <button 
                 type="button" 
-                onClick={handleLogIn}>Log In</button>
+                onClick={handleLogIn} className='flex'>
+                  {isSubmitting?<PropagateLoader className='flex items-center justify-center p-4 px-20' color={"#fff"}/>:"Log In"}
+              </button>
             </form>
           )}
         </div>
