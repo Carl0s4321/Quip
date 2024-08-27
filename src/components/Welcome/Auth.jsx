@@ -3,6 +3,9 @@ import { account, ID } from '../../lib/appwrite';
 import { useLocation, useNavigate} from 'react-router-dom';
 import useUserStore from '../../store/userStore';
 import { AppwriteException } from 'appwrite';
+import { authLeft, authRight } from '../../assets';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const Auth = () => {
   const location = useLocation();
@@ -68,60 +71,71 @@ const Auth = () => {
   }
 
   return (
-    <div className='flex justify-center items-center h-[85vh] flex-col'>
-    <div className={`container ${isSignUp ? 'active' : ''}`}>
-      <div className={`form-container ${isSignUp ? 'sign-up' : 'sign-in'}`}>
-        {isSignUp ? (
-          <form>
-            <h1 className='text-2xl font-semibold'>Create Account</h1>
-            {/* <div className="social-icons">
-              <a href="#" className="icon"><i className="fa-brands fa-google-plus-g"></i></a>
-              <a href="#" className="icon"><i className="fa-brands fa-facebook-f"></i></a>
-              <a href="#" className="icon"><i className="fa-brands fa-github"></i></a>
-              <a href="#" className="icon"><i className="fa-brands fa-linkedin-in"></i></a>
-            </div>
-            <span>or use your email for registration</span> */}
-            <input type="text" placeholder="Name" value={name} onChange={e => setName(e.target.value)} required/>
-            <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required/>
-            <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required/>
-            <button
-                type="button"
-                onClick={handleSignUp}>Sign Up</button>
-          </form>
-        ) : (
-          <form>
-            <h1  className='text-2xl font-semibold'>Log In</h1>
-            {/* <div className="social-icons">
-              <a href="#" className="icon"><i className="fa-brands fa-google-plus-g"></i></a>
-              <a href="#" className="icon"><i className="fa-brands fa-facebook-f"></i></a>
-              <a href="#" className="icon"><i className="fa-brands fa-github"></i></a>
-              <a href="#" className="icon"><i className="fa-brands fa-linkedin-in"></i></a>
-            </div>
-            <span>or use your email password</span> */}
-            <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required/>
-            <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required/>
-            {/* <a href="#">Forget Your Password?</a> */}
-            <button 
-              type="button" 
-              onClick={handleLogIn}>Log In</button>
-          </form>
-        )}
+    <>
+    <FontAwesomeIcon icon={faArrowLeft} className='p-5 cursor-pointer'onClick={()=>{navigate('/')}}/>
+    <div className='flex justify-center items-center h-[85vh]'>
+      {/* <div >
+      </div> */}
+      <div className='w-1/4 h-1/4 absolute left-0'>
+        <img src={authLeft}/>
       </div>
+      <div className={`container ${isSignUp ? 'active' : ''}`}>
+        <div className={`form-container ${isSignUp ? 'sign-up' : 'sign-in'}`}>
+          {isSignUp ? (
+            <form>
+              <h1 className='text-2xl font-semibold'>Create Account</h1>
+              {/* <div className="social-icons">
+                <a href="#" className="icon"><i className="fa-brands fa-google-plus-g"></i></a>
+                <a href="#" className="icon"><i className="fa-brands fa-facebook-f"></i></a>
+                <a href="#" className="icon"><i className="fa-brands fa-github"></i></a>
+                <a href="#" className="icon"><i className="fa-brands fa-linkedin-in"></i></a>
+              </div>
+              <span>or use your email for registration</span> */}
+              <input type="text" placeholder="Name" value={name} onChange={e => setName(e.target.value)} required/>
+              <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required/>
+              <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required/>
+              <button
+                  type="button"
+                  onClick={handleSignUp}>Sign Up</button>
+            </form>
+          ) : (
+            <form>
+              <h1  className='text-2xl font-semibold'>Log In</h1>
+              {/* <div className="social-icons">
+                <a href="#" className="icon"><i className="fa-brands fa-google-plus-g"></i></a>
+                <a href="#" className="icon"><i className="fa-brands fa-facebook-f"></i></a>
+                <a href="#" className="icon"><i className="fa-brands fa-github"></i></a>
+                <a href="#" className="icon"><i className="fa-brands fa-linkedin-in"></i></a>
+              </div>
+              <span>or use your email password</span> */}
+              <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required/>
+              <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required/>
+              {/* <a href="#">Forget Your Password?</a> */}
+              <button 
+                type="button" 
+                onClick={handleLogIn}>Log In</button>
+            </form>
+          )}
+        </div>
 
-      <div className="toggle-container">
-        <div className="toggle">
-          <div className="toggle-panel toggle-left">
-            <h1>Already have an account?</h1>
-            <button className="block" onClick={() => setIsSignUp(false)}>Log In here!</button>
-          </div>
-          <div className="toggle-panel toggle-right">
-            <h1>New to Quip?</h1>
-            <button className="block" onClick={() => setIsSignUp(true)}>Sign up here!</button>
+        <div className="toggle-container">
+          <div className="toggle">
+            <div className="toggle-panel toggle-left">
+              <h1>Already have an account?</h1>
+              <button className="block" onClick={() => setIsSignUp(false)}>Log In here!</button>
+            </div>
+            <div className="toggle-panel toggle-right">
+              <h1>New to Quip?</h1>
+              <button className="block" onClick={() => setIsSignUp(true)}>Sign up here!</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <div className='w-1/4 h-1/4 absolute right-0'>
+        <img src={authRight}/>
+      </div>
   </div>
+  </>
 );
 };
 

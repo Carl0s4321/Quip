@@ -5,11 +5,11 @@ import {About, Footer, Hero, Navbar, Subscribe, Testimonials, Auth, Home} from '
 function App() {
   return (
     <Router>
-    <div className="relative mt-14">
       <Routes>
         <Route path="/" element={
           <>
             <Navbar/>
+            <div className="relative mt-14">
             <Hero />
             <About />
             <div className='bg-custom-overall-gradient'>
@@ -17,12 +17,12 @@ function App() {
               <Subscribe />
             </div>
             <Footer/>
+            </div>
           </>
         } />
         <Route path="/auth" element={<Auth />} /> {/* only render auth component on /auth */}
         <Route path="/home" element={<Home />} />
       </Routes>
-    </div>
     </Router>
   );
 }
