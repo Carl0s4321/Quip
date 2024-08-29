@@ -10,14 +10,14 @@ function App() {
   useEffect(() => {
     const checkSession = async () => {
       const storedSession = localStorage.getItem("appwrite-session");
-      console.log(storedSession)
+      // console.log(storedSession)
       
       if (storedSession) {
         try {
           const user = await account.get(); // Check if the session is still valid
           setUser(user);
           setIsAuthenticated(true);
-          console.log('here')
+          // console.log('here')
         } catch (error) {
           // Session invalid, clear stored session
           localStorage.removeItem("appwrite-session");
@@ -40,7 +40,7 @@ function App() {
             <Navigate to="/home" /> // redirect authenticated users to /home
           ) : (
           <>
-            <Navbar isHome={false}/>
+            <Navbar/>
             <div className="relative mt-14">
             <Hero />
             <About />

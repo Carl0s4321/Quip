@@ -9,6 +9,7 @@ import FormButton from './Welcome/FormButton';
 import Navbar from './Navbar';
 
 import Home from './Home';
+import UserPicture from './UserPicture';
 
 export {
     Hero,
@@ -21,4 +22,5 @@ export {
     Navbar,
     FormButton,
     Home,
+    UserPicture,
 };

@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import useUserStore from "../store/userStore";
 import { account } from "../lib/appwrite";
 import Navbar from "./Navbar";
-import { useEffect } from "react";
+import WheelMenu from "./WheelMenu";
 
 const Home = () =>{
     const { user, setIsAuthenticated, clearUser} = useUserStore(); 
@@ -22,8 +22,8 @@ const Home = () =>{
 
     return(
       <>
-        <Navbar isHome={true}/>
-        <div className="relative mt-14">
+        <Navbar/>
+        <div className="relative mt-14 w-full h-full bg-slate-700">
             <h1>Welcome to the Home Page</h1>
             {user ? <p>Welcome back, {user.name}!</p> : <p>Please log in.</p>}
             <button
@@ -33,6 +33,7 @@ const Home = () =>{
             Logout
             </button>
         </div>
+        <WheelMenu/>
       </>
     )
 }
