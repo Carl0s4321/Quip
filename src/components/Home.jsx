@@ -5,37 +5,20 @@ import Navbar from "./Navbar";
 import { useEffect } from "react";
 
 const Home = () =>{
-    const { user, setUser} = useUserStore(); 
+    const { user, setIsAuthenticated, clearUser} = useUserStore(); 
     const navigate = useNavigate();
-    const { clearUser } = useUserStore(); 
 
-    // useEffect(() => {
-    //   if (!user) {
-    //     // fallback if global state isnt working:
-    //     // call appwrite api then set it as global state
-    //     // if any error then catch and logout, go back to login page
-    //     account.get().then(setUser).catch(() =>{
-    //       // logout
-    //     })
-    //   }
-    // }, []);
-
-    useEffect(() => {
-      const checkSession = async () => {
-        console.log(user)
-        if (!user) { // If user is not set in state, check session
-          console.log('a')
-          try {
-            const fetchedUser = await account.get();
-            setUser(fetchedUser);
-          } catch (error) {
-            console.log('No active session:', error);
-          }
-        }
-      };
-  
-      checkSession();
-    }, []);
+    const handleLogout = async () => {
+      try{
+        await account.deleteSession('current');
+        localStorage.removeItem("appwrite-session"); 
+        clearUser();
+        setIsAuthenticated(false);
+        navigate('/');
+      }catch(error){
+        console.error("Logout error:", error);
+      }
+    }
 
     return(
       <>
@@ -45,11 +28,7 @@ const Home = () =>{
             {user ? <p>Welcome back, {user.name}!</p> : <p>Please log in.</p>}
             <button
             type="button"
-            onClick={async () => {
-                await account.deleteSession('current');
-                clearUser();
-                navigate('/');
-            }}
+            onClick={handleLogout}
             >
             Logout
             </button>

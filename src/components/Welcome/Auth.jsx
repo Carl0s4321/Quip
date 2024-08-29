@@ -11,7 +11,7 @@ import { PropagateLoader } from 'react-spinners';
 const Auth = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { setUser } = useUserStore();
+  const { setUser, setIsAuthenticated, clearUser } = useUserStore();
   const { haveEmail } = location.state || {};
   const {showSignUp} = location.state || {showSignUp: false}
   const [isSignUp, setIsSignUp] = useState(showSignUp);
@@ -24,9 +24,18 @@ const Auth = () => {
     
   const login = async(email, password) => {
     try{
-      await account.createEmailPasswordSession(email, password);
-      setUser(await account.get());
+      const response = await account.createEmailPasswordSession(email, password);
+      const user = await account.get();
+
+      setUser(user);
+      setIsAuthenticated(true);
+
+      localStorage.setItem("appwrite-session", JSON.stringify(response));
+
     } catch(error){
+      localStorage.removeItem("appwrite-session");
+      clearUser();
+      setIsAuthenticated(false);
       throw error;
     }
   }
