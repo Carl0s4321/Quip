@@ -17,8 +17,6 @@ const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(showSignUp);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(false); // Loading state
-
   const [email, setEmail] = useState(haveEmail || '');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');

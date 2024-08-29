@@ -1,4 +1,4 @@
-import { Client, Account} from 'appwrite';
+import { Client, Account, Avatars} from 'appwrite';
 
 export const client = new Client();
 
@@ -9,5 +9,6 @@ client
     .setEndpoint(projectUrl)
     .setProject(projectId);
 
+export const avatar = new Avatars(client);
 export const account = new Account(client);
 export { ID } from 'appwrite';

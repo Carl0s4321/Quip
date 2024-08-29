@@ -2,6 +2,7 @@ import {styles} from '../styles'
 import { logo } from '../assets';
 import { Link, useNavigate } from 'react-router-dom';
 import useUserStore from '../store/userStore';
+import UserPicture from './UserPicture';
 
 const Navbar = ({isHome}) =>{
     const navigate = useNavigate();
@@ -11,7 +12,7 @@ const Navbar = ({isHome}) =>{
         <nav className={`${styles.paddingX} w-full h-14 flex items-center shadow-xl fixed top-0 z-20 bg-white`}>
             <div className="w-full flex justify-between items-center max-w-7xl mx-auto">
 
-                <Link to="/" className="absolute left-1/2 transform -translate-x-1/2" 
+                <Link to={isHome? '' : '/'} className="absolute left-1/2 transform -translate-x-1/2" 
                 onClick={() => {
                     window.scrollTo({
                         top: 0,
@@ -23,6 +24,9 @@ const Navbar = ({isHome}) =>{
                 {isHome? 
                 <div className="hidden sm:flex items-center list-none flex-row gap-10 ml-auto">
                     {user ? <p>{user.name}!</p> : <p>Please log in.</p>}
+                    <div className='h-12 w-12'>
+                        <UserPicture/>
+                    </div>
                 </div>
                 :
                 <ul className="hidden sm:flex items-center list-none flex-row gap-10 ml-auto">
