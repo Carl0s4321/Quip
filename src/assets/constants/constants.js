@@ -1,4 +1,5 @@
 import { folder, megaphone, leaf, checklist, brainstorm, book } from '..'
+import { faComment, faFillDrip, faGear } from '@fortawesome/free-solid-svg-icons';
 
 const cards = [
     {
@@ -84,10 +85,26 @@ const testimonials = [
       subtitle:"Need anything? Get in touch and we can help.",
       link:"#",
     },
+  ];
+
+  const wheelMenuIcons = [
+    {
+      icon: faComment,
+      popupContent: 'comment',
+    },
+    {
+      icon: faFillDrip,
+      popupContent: 'theme',
+    },
+    {
+      icon: faGear,
+      popupContent: 'settings',
+    },
   ]
 
 export {
     cards,
     testimonials,
     footers,
+    wheelMenuIcons,
 }

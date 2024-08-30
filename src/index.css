@@ -250,7 +250,3 @@
   transform: translateX(200%);
 }
 
-.fab-option {
-  z-index: -1;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
