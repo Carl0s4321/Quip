@@ -90,15 +90,18 @@ const testimonials = [
   const wheelMenuIcons = [
     {
       icon: faComment,
-      popupContent: 'comment',
+      popupContent: 'message',
+      size: { width: '350px', height: '550px' },
     },
     {
       icon: faFillDrip,
       popupContent: 'theme',
+      size: { width: '350px', height: '350px' },
     },
     {
       icon: faGear,
       popupContent: 'settings',
+      size: { width: '350px', height: '100px' },
     },
   ]
 

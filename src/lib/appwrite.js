@@ -1,14 +1,39 @@
-import { Client, Account, Avatars} from 'appwrite';
+import { Client, Account, Avatars, Databases} from 'appwrite';
 
-export const client = new Client();
+const client = new Client();
 
 const projectUrl = import.meta.env.VITE_APPWRITE_URL;
-const projectId = import.meta.env.VITE_APPWRITE_PROJECT_ID;
+const PROJECT_ID = import.meta.env.VITE_APPWRITE_PROJECT_ID;
+
+const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
+const TASKS_ID = import.meta.env.VITE_APPWRITE_COLLECTION_TASKS_ID;
+const FRIENDREQUESTS_ID = import.meta.env.VITE_APPWRITE_COLLECTION_FRIENDREQUESTS_ID;
+const BOARDINVITATIONS_ID = import.meta.env.VITE_APPWRITE_COLLECTION_BOARDINVITATIONS_ID;
+const BOARDS_ID = import.meta.env.VITE_APPWRITE_COLLECTION_BOARDS_ID;
+const MESSAGES_ID = import.meta.env.VITE_APPWRITE_COLLECTION_MESSAGES_ID;
+const USERPROFILES_ID = import.meta.env.VITE_APPWRITE_COLLECTION_USERPROFILES_ID;
+
 
 client
     .setEndpoint(projectUrl)
-    .setProject(projectId);
+    .setProject(PROJECT_ID);
 
-export const avatar = new Avatars(client);
-export const account = new Account(client);
+const avatar = new Avatars(client);
+const account = new Account(client);
+const databases = new Databases(client);
+
+export {
+    avatar,
+    account,
+    databases,
+    PROJECT_ID,
+    DATABASE_ID,
+    TASKS_ID,
+    FRIENDREQUESTS_ID,
+    BOARDINVITATIONS_ID,
+    BOARDS_ID,
+    MESSAGES_ID,
+    USERPROFILES_ID,
+  };
+
 export { ID } from 'appwrite';

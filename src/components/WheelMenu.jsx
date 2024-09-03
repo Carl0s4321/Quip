@@ -71,17 +71,15 @@ const WheelMenu = () => {
       {/* Popup Modal */}
       {activePopup !== null && (
         <Draggable>
-          <div className="fixed inset-0 flex items-center justify-end z-20">
-
-          <div className="bg-white p-4 rounded shadow-md w-[350px] h-[550px]">
-            <h2 className="text-lg font-semibold">{wheelMenuIcons[activePopup].popupContent}</h2>
-            <button
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-              onClick={() => setActivePopup(null)} // Close the popup
-              >
-              Close
-            </button>
-          </div>
+          <div className="bg-white rounded-xl shadow-md fixed right-10 top-10 transform z-20" 
+            style={{
+                width: wheelMenuIcons[activePopup].size.width,
+                height: wheelMenuIcons[activePopup].size.height,
+              }}>
+            <div className="cursor-move bg-darkBlue text-white flex flex-row items-center justify-between rounded-t-xl p-4">
+              <h2 className="text-lg font-semibold">{wheelMenuIcons[activePopup].popupContent}</h2>
+              <FontAwesomeIcon className="text-xl text-white cursor-pointer" icon={faXmark} onClick={() => setActivePopup(null)}/>
+            </div>
           </div>
         </Draggable>
       )}

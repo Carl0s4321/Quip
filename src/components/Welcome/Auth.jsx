@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { account, ID } from '../../lib/appwrite';
+import { account, ID, databases, USERPROFILES_ID, DATABASE_ID} from '../../lib/appwrite';
 import { useLocation, useNavigate} from 'react-router-dom';
 import useUserStore from '../../store/userStore';
 import { AppwriteException } from 'appwrite';
@@ -55,7 +55,18 @@ const Auth = () => {
   const handleSignUp = async() => {
     setIsSubmitting(true);
     try{
-      await account.create(ID.unique(), email, password, name);
+      const response = await account.create(ID.unique(), email, password, name);
+      const userId = response.$id;
+      
+       // store userId in database
+      databases.createDocument(
+        DATABASE_ID,
+        USERPROFILES_ID,
+        userId,
+        { "userId": userId }
+      );
+
+
       await login(email, password);
       navigate('/home');  
     }catch(error){
@@ -81,7 +92,8 @@ const Auth = () => {
           alert(`Error: ${error.message}`);
       }
     }else{
-      alert('An unexpected error occurred. Please try again.');
+      alert(error);
+      // alert('An unexpected error occurred. Please try again.');
     }
   }
 
