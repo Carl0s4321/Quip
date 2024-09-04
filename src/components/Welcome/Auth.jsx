@@ -40,7 +40,8 @@ const Auth = () => {
     }
   }
 
-  const handleLogIn = async() => {
+  const handleLogIn = async(e) => {
+    e.preventDefault();
     setIsSubmitting(true);
     try{
       await login(email, password);
@@ -52,22 +53,24 @@ const Auth = () => {
     }
   }
 
-  const handleSignUp = async() => {
+  const handleSignUp = async(e) => {
+    e.preventDefault();
     setIsSubmitting(true);
     try{
       const response = await account.create(ID.unique(), email, password, name);
       const userId = response.$id;
       
-       // store userId in database
-      databases.createDocument(
-        DATABASE_ID,
-        USERPROFILES_ID,
-        userId,
-        { "userId": userId }
-      );
-
+      // store userId in the database
+      try {
+        await databases.createDocument(DATABASE_ID, USERPROFILES_ID, userId, { 'userId': userId });
+      } catch (dbError) {
+        console.error('Error creating user profile:', dbError);
+        handleAppwriteException(dbError);
+        return;
+      }
 
       await login(email, password);
+
       navigate('/home');  
     }catch(error){
       handleAppwriteException(error);
@@ -92,16 +95,10 @@ const Auth = () => {
           alert(`Error: ${error.message}`);
       }
     }else{
-      alert(error);
-      // alert('An unexpected error occurred. Please try again.');
+      alert('An unexpected error occurred: ', error);
     }
   }
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      handleLogIn();
-    }
-  };
 
   return (
     <>
@@ -113,23 +110,20 @@ const Auth = () => {
       <div className={`container ${isSignUp ? 'active' : ''}`}>
         <div className={`form-container ${isSignUp ? 'sign-up' : 'sign-in'}`}>
           {isSignUp ? (
-            <form>
+            <form onSubmit={handleSignUp}>
               <h1 className='text-2xl font-semibold'>Create Account</h1>
               <input type="text" placeholder="Name" value={name} onChange={e => setName(e.target.value)} required/>
               <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required/>
               <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required/>
-              <button
-                  type="button"
-                  onClick={handleSignUp}>Sign Up</button>
+              <button type="submit" disabled={isSubmitting}>
+                {isSubmitting?<PropagateLoader className='flex items-center justify-center p-4 px-20' color={"#fff"}/>:"Log In"}</button>
             </form>
           ) : (
-            <form>
+            <form onSubmit={handleLogIn}>
               <h1  className='text-2xl font-semibold'>Log In</h1>
-              <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required onKeyDown={handleKeyDown}/>
-              <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required onKeyDown={handleKeyDown}/>
-              <button 
-                type="button" 
-                onClick={handleLogIn} className='flex'>
+              <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required/>
+              <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required/>
+              <button type="submit" className='flex' disabled={isSubmitting}>
                   {isSubmitting?<PropagateLoader className='flex items-center justify-center p-4 px-20' color={"#fff"}/>:"Log In"}
               </button>
             </form>
