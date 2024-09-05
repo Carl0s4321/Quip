@@ -10,6 +10,7 @@ import Navbar from './Navbar';
 
 import Home from './Home';
 import UserPicture from './UserPicture';
+import BoardsList from './BoardsList';
 
 export {
     Hero,
@@ -23,4 +24,5 @@ export {
     FormButton,
     Home,
     UserPicture,
+    BoardsList,
 };
