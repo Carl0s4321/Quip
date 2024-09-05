@@ -5,6 +5,7 @@ import { styles } from "../styles";
 import { account} from '../lib/appwrite';
 
 import BoardsList from "./BoardsList";
+import { SectionWrapper } from "../hoc";
 
 const Home = () =>{
     const { user, setIsAuthenticated, clearUser} = useUserStore(); 
@@ -43,4 +44,4 @@ const Home = () =>{
       </>
     )
 }
-export default Home;
+export default SectionWrapper(Home,"");

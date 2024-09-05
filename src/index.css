@@ -251,7 +251,7 @@
 }
 
 .boardButton {
-  min-width: 300px;
+  min-width: 150px;
   padding: 10px;
   direction: flex;
   text-align: center;
