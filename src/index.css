@@ -250,3 +250,21 @@
   transform: translateX(200%);
 }
 
+.boardButton {
+  min-width: 300px;
+  padding: 10px;
+  direction: flex;
+  text-align: center;
+  font-size: 30px; /* equivalent to text-3xl */
+  color: white; /* text-white */
+  cursor: pointer; /* cursor-pointer */
+  border: 2px solid; /* border-2 */
+  border-radius: 0.5rem; /* rounded-lg */
+  transition: color 0.3s, background-color 0.3s; /* smooth transition for hover effect */
+}
+
+.boardButton:hover {
+  color: black;
+  background-color: white; /* hover:bg-white */
+}
+

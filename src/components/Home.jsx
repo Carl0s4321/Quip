@@ -6,9 +6,35 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 
+import { styles } from "../styles";
+
+
 import { Query } from "appwrite";
 
 import { databases, account, DATABASE_ID, BOARDS_ID, ID} from '../lib/appwrite';
+
+const columns = [
+  { id: "todo", name: "To Do" },
+  { id: "in-progress", name: "In Progress" },
+  { id: "done", name: "Done" }
+];
+
+const getBoardColumns = async (boardId) => {
+  try {
+    const response = await databases.getDocument(
+      DATABASE_ID,
+      BOARDS_COLLECTION_ID,
+      boardId
+    );
+
+    // json string to array of objects
+    const columns = JSON.parse(response.columns);
+
+    return columns;
+  } catch (error) {
+    console.error('Error fetching board columns:', error);
+  }
+};
 
 const createBoard = async (userId, boardName) => {
   try {
@@ -19,6 +45,7 @@ const createBoard = async (userId, boardName) => {
       {
         userId,
         boardName,
+        columns: JSON.stringify(columns),
       }
     );
     return response;
@@ -87,7 +114,7 @@ const BoardNamePopup = ({ onSubmit, onClose }) => {
 
 const Board = ({board}) => {
   return(
-    <div className="text-3xl text-white cursor-pointer px-20 py-10 border-2 rounded-lg">
+    <div className="boardButton" onClick={() => console.log(board)}>
       {board.boardName}
     </div>
   )
@@ -125,18 +152,25 @@ const BoardsList = () => {
       {userId ? (
             <>
               <h1>Boards</h1>
-              <ul className="flex flex-wrap gap-5">
-                <FontAwesomeIcon
+              <ul className="grid w-full grid-cols-4 gap-5">
+                {/* <FontAwesomeIcon
                   icon={faPlus} 
-                  className="text-3xl text-white cursor-pointer px-20 py-10 border-2 rounded-lg " 
+                  className= "boardButton" 
                   onClick={() => {
                     setPopupVisible(true);
                   }}
-                />
+                /> */}
+                <p
+                  className= "boardButton" 
+                  onClick={() => {
+                    setPopupVisible(true);
+                  }}
+                >+</p>
                 { boards.map(board => (
                     <Board 
                       key={board.$id}
-                      board={board}/>
+                      board={board}
+                      />
                   ))}
               </ul>
               {isPopupVisible && (
@@ -171,7 +205,7 @@ const Home = () =>{
     return(
       <>
         <Navbar/>
-        <div className="relative mt-14 w-full h-full bg-slate-700">
+        <div className={`${styles.padding} bg-slate-700`}>
             <h1>Welcome to the Home Page</h1>
             <p>Welcome back, {user?.name}!</p>
 
