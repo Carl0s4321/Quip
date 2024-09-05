@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import './App.css'
-import {About, Footer, Hero, Navbar, Subscribe, Testimonials, Auth, Home} from './components'
+import {About, Footer, Hero, Navbar, Subscribe, Testimonials, Auth, Home, BoardHome} from './components'
 import { account } from './lib/appwrite';
 import useUserStore from './store/userStore';
 import { useEffect } from 'react';
@@ -34,13 +34,14 @@ function App() {
   
   return (
     <Router>
+      <Navbar/>
+      
       <Routes>
         <Route path="/" element={
            isAuthenticated ? (
             <Navigate to="/home" /> // redirect authenticated users to /home
           ) : (
           <>
-            <Navbar/>
             <div className="relative mt-14">
             <Hero />
             <About />
@@ -54,6 +55,7 @@ function App() {
   )} />
         <Route path="/auth" element={<Auth />} /> {/* only render auth component on /auth */}
         <Route path="/home" element={<Home />} />
+        <Route path="/board/:boardId" element={<BoardHome />} />
       </Routes>
     </Router>
   );

@@ -11,6 +11,7 @@ import Navbar from './Navbar';
 import Home from './Home';
 import UserPicture from './UserPicture';
 import BoardsList from './BoardsList';
+import BoardHome from './BoardHome'
 
 export {
     Hero,
@@ -25,4 +26,5 @@ export {
     Home,
     UserPicture,
     BoardsList,
+    BoardHome,
 };

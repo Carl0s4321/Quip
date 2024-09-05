@@ -9,7 +9,7 @@ const Navbar = () =>{
     const {user, isAuthenticated} = useUserStore();
 
     return(
-        <nav className={`${styles.paddingX} w-full h-14 flex items-center shadow-xl fixed top-0 z-20 bg-white`}>
+        <nav className={`${styles.paddingX} w-full h-14 flex items-center shadow-xl fixed top-0 z-50 bg-white`}>
             <div className="w-full flex justify-between items-center max-w-7xl mx-auto">
 
                 <Link to={isAuthenticated? '' : '/'} className="absolute left-1/2 transform -translate-x-1/2" 

@@ -27,7 +27,6 @@ import { databases, DATABASE_ID, BOARDS_ID, ID} from '../lib/appwrite';
 //     }
 //   };
 
-
 const BoardNamePopup = ({ onSubmit, onClose }) => {
     const [boardName, setBoardName] = useState('');
   
@@ -71,15 +70,15 @@ const BoardNamePopup = ({ onSubmit, onClose }) => {
     );
   };
   
-const Board = ({board}) => {
+const Board = ({board, onClick}) => {
     return(
-      <div className="boardButton" onClick={() => console.log(board)}>
+      <div className="boardButton" onClick={onClick}>
         {board.boardName}
       </div>
     )
   }  
 
-const BoardsList = () => {
+const BoardsList = ({navigate}) => {
     const [boards, setBoards] = useState([]);
     const [isPopupVisible, setPopupVisible] = useState(false);
     const {userId} = useUserStore();
@@ -155,6 +154,7 @@ const BoardsList = () => {
                       <Board 
                         key={board.$id}
                         board={board}
+                        onClick={() => navigate(`/board/${board.$id}`)}
                         />
                     ))}
                 </ul>

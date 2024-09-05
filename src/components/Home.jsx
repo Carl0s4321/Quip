@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import useUserStore from "../store/userStore";
-import Navbar from "./Navbar";
 import WheelMenu from "./WheelMenu";
 import { styles } from "../styles";
 import { account} from '../lib/appwrite';
@@ -25,12 +24,11 @@ const Home = () =>{
 
     return(
       <>
-        <Navbar/>
         <div className={`${styles.padding} bg-slate-700`}>
             <h1>Welcome to the Home Page</h1>
             <p>Welcome back, {user?.name}!</p>
 
-            <BoardsList/>
+            <BoardsList navigate={navigate}/>
 
             <button
             type="button"

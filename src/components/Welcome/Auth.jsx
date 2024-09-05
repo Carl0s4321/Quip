@@ -102,7 +102,7 @@ const Auth = () => {
 
   return (
     <>
-    <FontAwesomeIcon icon={faArrowLeft} className='p-5 cursor-pointer'onClick={()=>{navigate('/')}}/>
+    <FontAwesomeIcon icon={faArrowLeft} className='p-5 cursor-pointer mt-14'onClick={()=>{navigate('/')}}/>
     <div className='flex justify-center items-center h-[85vh]'>
       <div className='w-1/4 h-1/4 absolute left-0'>
         <img src={authLeft}/>
