@@ -107,7 +107,6 @@ const BoardsList = ({navigate}) => {
           {
             userId,
             boardName,
-            columns: JSON.stringify(columns),
           }
         );
         return response;
