@@ -6,7 +6,7 @@ import { databases, DATABASE_ID, BOARDS_ID, TODO_ID} from "../lib/appwrite";
 import { SectionWrapper } from "../hoc";
 
 import { Query } from "appwrite";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext,Droppable, Draggable } from "@hello-pangea/dnd";
 
 
 const BoardHome = () => {
@@ -29,13 +29,30 @@ const BoardHome = () => {
     }
   };
   
-  const Task = ({eachData}) => {
-    // console.log('eachData: ', eachData);
+  const Task = ({eachData, index}) => {
+    console.log('eachData: ', eachData);
     return(
-      <div className="">
-        {eachData.taskTitle}
-        {eachData.taskSubTitle}
-      </div>
+          <Draggable key={eachData.$id} draggableId={eachData.$id} index={index}>
+            {(provided)=>{
+               <div
+                  ref={provided.innerRef}
+                  {...provided.draggableProps}
+                  {...provided.dragHandleProps}
+                  style={{
+                    padding: '16px',
+                    margin: '8px',
+                    backgroundColor: '#f0f0f0',
+                    border: '1px solid #ddd',
+                    ...provided.draggableProps.style,
+                  }}
+                >
+                
+                {eachData.taskTitle}
+                {eachData.taskSubTitle}
+              </div>
+            }}
+          </Draggable>
+      
     )
   }
 
@@ -53,8 +70,13 @@ const BoardHome = () => {
     fetchBoardDetails();
   }, [boardId]);
   
+  const handleOnDragEnd = (result) => {
+    <>
+    
+    </>
+  }
+  
   if (!board) return <p>Loading...</p>;
-  // console.log('data:', data)
 
   return (
     <div className="bg-blue-500">
@@ -64,11 +86,24 @@ const BoardHome = () => {
           <h2>{board.boardName}</h2>
           <p>board creator user id: {board.userId}</p>
           <p>board id: {board.$id}</p>
-          {
-            data.map(eachData => (
-              <Task eachData = {eachData}/>
-            ))
-          }
+
+
+
+          <DragDropContext onDragEnd={handleOnDragEnd}>
+            <Droppable droppableId="droppable-1">
+              {(provided) => (
+                <div {...provided.droppableProps} ref={provided.innerRef}>
+                  {data.map((eachData, index) => (
+
+                    <Task key={eachData.$id} eachData={eachData} index={index}/>
+
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+
         </div>
       </div>
 
