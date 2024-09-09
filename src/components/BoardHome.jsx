@@ -29,32 +29,33 @@ const BoardHome = () => {
     }
   };
   
-  const Task = ({eachData, index}) => {
+  const Task = ({ eachData, index }) => {
     console.log('eachData: ', eachData);
-    return(
-          <Draggable key={eachData.$id} draggableId={eachData.$id} index={index}>
-            {(provided)=>{
-               <div
-                  ref={provided.innerRef}
-                  {...provided.draggableProps}
-                  {...provided.dragHandleProps}
-                  style={{
-                    padding: '16px',
-                    margin: '8px',
-                    backgroundColor: '#f0f0f0',
-                    border: '1px solid #ddd',
-                    ...provided.draggableProps.style,
-                  }}
-                >
-                
-                {eachData.taskTitle}
-                {eachData.taskSubTitle}
-              </div>
+  
+    return (
+      <Draggable key={eachData.$id} draggableId={eachData.$id} index={index}>
+        {(provided) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            style={{
+              padding: '16px',
+              margin: '8px',
+              backgroundColor: '#f0f0f0',
+              border: '1px solid #ddd',
+              ...provided.draggableProps.style,
             }}
-          </Draggable>
-      
-    )
-  }
+          >
+            {eachData.taskTitle}
+            <br />
+            {eachData.taskSubTitle}
+          </div>
+        )}
+      </Draggable>
+    );
+  };
+  
 
   useEffect(() => {
     const fetchBoardDetails = async () => {
