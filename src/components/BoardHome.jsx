@@ -12,8 +12,9 @@ import { DragDropContext,Droppable, Draggable } from "@hello-pangea/dnd";
 const BoardHome = () => {
   const { boardId } = useParams(); // get boardId from url '/board/:boardId
   const [board, setBoard] = useState(null);
-  const [data, setData] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const navigate = useNavigate();
+  const grid = 8;
 
   const getTasks = async (boardId) => {
     try {
@@ -28,28 +29,45 @@ const BoardHome = () => {
       console.error('Error fetching data:', error);
     }
   };
+
+
+  const getListStyle = isDraggingOver => ({
+    background: isDraggingOver ? "lightblue" : "lightgrey",
+    padding: grid,
+    width: 550
+  });
+
+  const getItemStyle = (isDragging, draggableStyle) => ({
+    // some basic styles to make the items look a bit nicer
+    userSelect: "none",
+    padding: grid * 2,
+    margin: `0 0 ${grid}px 0`,
   
-  const Task = ({ eachData, index }) => {
-    console.log('eachData: ', eachData);
+    // change background colour if dragging
+    background: isDragging ? "lightgreen" : "grey",
+  
+    // styles we need to apply on draggables
+    ...draggableStyle
+  });
+  
+  const Task = ({ task, index }) => {
+    // console.log('task: ', task);
   
     return (
-      <Draggable key={eachData.$id} draggableId={eachData.$id} index={index}>
-        {(provided) => (
+      <Draggable key={task.$id} draggableId={task.$id} index={index}>
+        {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
-            style={{
-              padding: '16px',
-              margin: '8px',
-              backgroundColor: '#f0f0f0',
-              border: '1px solid #ddd',
-              ...provided.draggableProps.style,
-            }}
+            style={getItemStyle(
+              snapshot.isDragging,
+              provided.draggableProps.style
+            )}
           >
-            {eachData.taskTitle}
+            {task.taskTitle}
             <br />
-            {eachData.taskSubTitle}
+            {task.taskSubTitle}
           </div>
         )}
       </Draggable>
@@ -65,16 +83,33 @@ const BoardHome = () => {
       // console.log('response', response)
       const result = await getTasks(response.$id);
       
-      setData(result);
+      setTasks(result);
     };
 
     fetchBoardDetails();
-  }, [boardId]);
+  }, []);
+
+  const reorder = (list, startIndex, endIndex) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
   
+    return result;
+  };
+
   const handleOnDragEnd = (result) => {
-    <>
-    
-    </>
+    // dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+
+    const items = reorder(
+      tasks,
+      result.source.index,
+      result.destination.index
+    );
+
+    setTasks(items);
   }
   
   if (!board) return <p>Loading...</p>;
@@ -92,11 +127,11 @@ const BoardHome = () => {
 
           <DragDropContext onDragEnd={handleOnDragEnd}>
             <Droppable droppableId="droppable-1">
-              {(provided) => (
-                <div {...provided.droppableProps} ref={provided.innerRef}>
-                  {data.map((eachData, index) => (
+              {(provided, snapshot) => (
+                <div {...provided.droppableProps} ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
+                  {tasks.map((task, index) => (
 
-                    <Task key={eachData.$id} eachData={eachData} index={index}/>
+                    <Task key={task.$id} task={task} index={index}/>
 
                   ))}
                   {provided.placeholder}
