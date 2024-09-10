@@ -4,28 +4,7 @@ import useUserStore from "../store/userStore";
 import { Query } from "appwrite";
 import { databases, DATABASE_ID, BOARDS_ID, ID} from '../lib/appwrite';
 
-// const columns = [
-//     { id: "todo", name: "To Do" },
-//     { id: "in-progress", name: "In Progress" },
-//     { id: "done", name: "Done" }
-//   ];
-  
-//   const getBoardColumns = async (boardId) => {
-//     try {
-//       const response = await databases.getDocument(
-//         DATABASE_ID,
-//         BOARDS_COLLECTION_ID,
-//         boardId
-//       );
-  
-//       // json string to array of objects
-//       const columns = JSON.parse(response.columns);
-  
-//       return columns;
-//     } catch (error) {
-//       console.error('Error fetching board columns:', error);
-//     }
-//   };
+import useBoardStore from "../store/boardStore";
 
 const BoardNamePopup = ({ onSubmit, onClose }) => {
     const [boardName, setBoardName] = useState('');
@@ -79,11 +58,12 @@ const Board = ({board, onClick}) => {
   }  
 
 const BoardsList = ({navigate}) => {
-    const [boards, setBoards] = useState([]);
+    const [boardList, setBoardList] = useState([]);
     const [isPopupVisible, setPopupVisible] = useState(false);
     const {userId} = useUserStore();
+    const {setBoardInfo} = useBoardStore(); 
 
-    const getBoards = async (userId) => {
+    const getBoardList = async (userId) => {
       try {
         // console.log('userID: ', userId)
         const response = await databases.listDocuments(
@@ -125,16 +105,16 @@ const BoardsList = ({navigate}) => {
     };
 
     useEffect(() => {
-      const fetchBoards = async () => {
+      const fetchBoardList = async () => {
         if (!userId) {
           console.error('User ID is not available');
           return;
         }
-        const data = await getBoards(userId);
-        setBoards(data);
+        const data = await getBoardList(userId);
+        setBoardList(data);
       };
   
-      fetchBoards();
+      fetchBoardList();
     }, [userId]);
   
     return (
@@ -149,11 +129,14 @@ const BoardsList = ({navigate}) => {
                       setPopupVisible(true);
                     }}
                   >+</p>
-                  { boards.map(board => (
+                  { boardList.map(eachBoard => (
                       <Board 
-                        key={board.$id}
-                        board={board}
-                        onClick={() => navigate(`/board/${board.$id}`)}
+                        key={eachBoard.$id}
+                        board={eachBoard}
+                        onClick={() => {
+                          setBoardInfo(eachBoard);
+                          navigate(`/board`);
+                        }}
                         />
                     ))}
                 </ul>
@@ -164,7 +147,7 @@ const BoardsList = ({navigate}) => {
                   />
                 )}
               </>
-            ) : null
+            ) : <p>Loading...</p>
         }
       </>
     );

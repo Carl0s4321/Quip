@@ -10,14 +10,12 @@ function App() {
   useEffect(() => {
     const checkSession = async () => {
       const storedSession = localStorage.getItem("appwrite-session");
-      // console.log(storedSession)
       
       if (storedSession) {
         try {
           const user = await account.get(); // Check if the session is still valid
           setUser(user);
           setIsAuthenticated(true);
-          // console.log('here')
         } catch (error) {
           // Session invalid, clear stored session
           localStorage.removeItem("appwrite-session");
@@ -30,8 +28,6 @@ function App() {
     checkSession();
   }, [setIsAuthenticated]);
 
-  // console.log('authenthicated? ', isAuthenticated)
-  
   return (
     <Router>
       <Navbar/>
@@ -55,7 +51,7 @@ function App() {
   )} />
         <Route path="/auth" element={<Auth />} /> {/* only render auth component on /auth */}
         <Route path="/home" element={<Home />} />
-        <Route path="/board/:boardId" element={<BoardHome />} />
+        <Route path="/board" element={<BoardHome />} />
       </Routes>
     </Router>
   );
