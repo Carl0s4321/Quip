@@ -73,27 +73,25 @@ const BoardHome = () => {
     ...draggableStyle
   });
   
-  const Task = ({ task, index }) => {
+  const Task = (props) => {
+    const task = props.task;
+    const index = props.index;
+    const draggableProps = props.draggableProps;
+    const dragHandleProps = props.dragHandleProps;
+    const innerRef = props.innerRef;
     // console.log('task: ', task);
   
     return (
-      <Draggable key={task.$id} draggableId={task.$id} index={index}>
-        {(provided, snapshot) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            style={getItemStyle(
-              snapshot.isDragging,
-              provided.draggableProps.style
-            )}
-          >
+      <div 
+        className="bg-white rounde-md space-y-2 drop-shadow-md"
+        {...draggableProps}
+        {...dragHandleProps}
+        ref={innerRef}
+      >
             {task.taskTitle}
             <br />
             {task.taskSubTitle}
-          </div>
-        )}
-      </Draggable>
+      </div>
     );
   };
   
@@ -107,9 +105,9 @@ const BoardHome = () => {
       const { todo: fetchedTodoTasks, inprogress: fetchedInProgressTasks, done: fetchedDoneTasks } = await getTasks(boardId);
 
       setColumns([
-        { id: 'droppable-1', tasks: fetchedTodoTasks },
-        { id: 'droppable-2', tasks: fetchedInProgressTasks },
-        { id: 'droppable-3', tasks: fetchedDoneTasks },
+        { id: 'ToDo', tasks: fetchedTodoTasks },
+        { id: 'InProgress', tasks: fetchedInProgressTasks },
+        { id: 'Done', tasks: fetchedDoneTasks },
       ]);
 
       setTodoTasks(fetchedTodoTasks);
@@ -128,44 +126,101 @@ const BoardHome = () => {
 
 
 
-  const reorder = (list, startIndex, endIndex) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
   
-    return result;
-  };
-
   const handleOnDragEnd = (result) => {
+
+    const reorder = (list, startIndex, endIndex) => {
+      const result = Array.from(list);
+      const [removed] = result.splice(startIndex, 1);
+      result.splice(endIndex, 0, removed);
+    
+      return result;
+    };
+
+    const{destination, source, type} = result;
+
     // dropped outside the list
-    if (!result.destination) {
+    if (!destination) {
       return;
     }
 
-    const items = reorder(
-      tasks,
-      result.source.index,
-      result.destination.index
-    );
+    // column drag
+    if(type==="column"){
+      
+    }
 
-    setTasks(items);
+    // const items = reorder(
+    //   tasks,
+    //   result.source.index,
+    //   result.destination.index
+    // );
+
+    // setTasks(items);
   }
 
-  const Column = ({column}) => {
+  const Column = (props) => {
+    const index = props.index;
+    const tasks = props.tasks;
+    const id = props.id;
     return(
-      <Droppable droppableId={column.id}>
-        {(provided, snapshot) => (
-          <div {...provided.droppableProps} ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
+      <Draggable draggableId={id} index={index}>
+        {(provided)=>(
+          <div 
+            ref={provided.innerRef} 
+            {...provided.draggableProps} 
+            {...provided.dragHandleProps}
+          >
+            
+            <Droppable droppableId={`droppable-` + index} type="card">
+              {(provided, snapshot) => (
+                <div 
+                  {...provided.droppableProps} 
+                  ref={provided.innerRef}
+                  className={`p-2 rounded-2xl shadow-sm ${snapshot.isDraggingOver? "bg-green-200" : "bg-white/50"}`}
+                >
+                      <h2 className="flex justify-between font-semibold text-xl p-2">
+                        {id}
+                        <span className="text-gray-500 bg-gray-200 rounded-full px-2 py-1 text-sm font-normal">
+                          {tasks.length}
+                        </span>
+                      </h2>
 
-            {column.tasks.map((task, index) => (
+                      <div className="space-y-2">
+                        {tasks.map((task, index) => (
+                          <Draggable
+                            key={task.$id}
+                            draggableId={task.$id}
+                            index={index}
+                          >
+                            {(provided) => (
+                              <Task 
+                                key={id} 
+                                task={task} 
+                                index={index}
+                                innerRef={provided.innerRef}
+                                draggableProps={provided.draggableProps}
+                                dragHandleProps={provided.dragHandleProps}  
+                              />
 
-              <Task key={task.$id} task={task} index={index}/>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
 
-            ))}
-            {provided.placeholder}
+                        <div>
+                          <button>
+                            +
+                          </button>
+                        </div>
+                      </div>
+                </div>
+              )}
+            </Droppable>
+
           </div>
         )}
-      </Droppable>
+
+      </Draggable>
     )
   }
 
@@ -183,9 +238,25 @@ const BoardHome = () => {
           <p>board id: {board.$id}</p>
 
           <DragDropContext onDragEnd={handleOnDragEnd}>
-            {columns.map((column, index) => (
-              <Column column={column} index={index} key={column.id}/>
-            ))}
+            <Droppable droppableId="board" type="column" direction="horizontal">
+              {(provided) => (
+                <div 
+                  className="grid grid-cols-1 md:grid-cols-3 gap-5 max-7-xl mx-auto"
+                  ref={provided.innerRef} 
+                  {...provided.droppableProps}
+                >
+                    {columns.map((column, index) => (
+                      <Column 
+                        tasks={column.tasks} 
+                        id={column.id} 
+                        index={index} 
+                        key={column.id}
+                      />
+                    ))}
+                    {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
             
           </DragDropContext>
 
