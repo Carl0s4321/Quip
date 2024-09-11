@@ -55,7 +55,7 @@ export const fetchTasksByColumn = async () => {
             if(!columns.get(columnType)){
                 columns.set(columnType, {
                     id: columnType,
-                    todos: [],
+                    tasks: [],
                 })
             }
         }
