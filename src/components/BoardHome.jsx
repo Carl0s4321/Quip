@@ -17,10 +17,7 @@ import WheelMenu from "./WheelMenu";
 const BoardHome = () => {
   const {clearBoardInfo, getBoard, board, setBoardColumns, updateTaskInDB} = useBoardStore();
 
-  const [columns, setColumns] = useState([]);
-
   const navigate = useNavigate();
-  const grid = 8;
 
   useEffect(() => {
     getBoard();
@@ -46,17 +43,17 @@ const BoardHome = () => {
       setBoardColumns(rearrangedColumns);
     }
 
-    console.log('source.droppableId', source.droppableId)
-    console.log('Number(source.droppableId)', Number(source.droppableId))
+    // console.log('source.droppableId', source.droppableId)
+    // console.log('Number(source.droppableId)', Number(source.droppableId))
 
     // make copy for task dragging
     const columns =  Array.from(board.columns);
     const startColIndex = columns[Number(source.droppableId)];
     const finishColIndex = columns[Number(destination.droppableId)];
 
-    console.log('HERE', columns)
-    console.log('startColIndex', startColIndex)
-    console.log('finishColIndex', finishColIndex)
+    // console.log('HERE', columns)
+    // console.log('startColIndex', startColIndex)
+    // console.log('finishColIndex', finishColIndex)
 
 
     const startCol= {
@@ -68,7 +65,7 @@ const BoardHome = () => {
       tasks: finishColIndex[1].tasks,
     }
 
-    console.log(startCol, finishCol)
+    // console.log(startCol, finishCol)
 
     if(!startCol || !finishCol) return;
 

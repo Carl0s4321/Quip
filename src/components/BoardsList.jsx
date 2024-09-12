@@ -9,9 +9,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { styles } from "../styles";
 
-const BoardNamePopup = ({ onSubmit, onClose }) => {
+const BoardPopup = ({ type, onClick, onSubmit, onClose }) => {
     const [boardName, setBoardName] = useState('');
-    
     
     const handleSubmit = (e) => {
       e.preventDefault();
@@ -23,45 +22,68 @@ const BoardNamePopup = ({ onSubmit, onClose }) => {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
         <div className="bg-white rounded-xl p-4 shadow-md w-80">
-          <h2 className="text-lg font-semibold mb-4">Enter Board Name</h2>
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              value={boardName}
-              onChange={(e) => setBoardName(e.target.value)}
-              className="border border-gray-300 rounded p-2 w-full mb-4"
-              placeholder="Board Name"
-            />
-            <div className="flex justify-end">
-              <button
-                type="submit"
-                className="bg-blue-500 text-white rounded px-4 py-2 mr-2"
-              >
-                Create
-              </button>
-              <button
-                type="button"
-                onClick={onClose}
-                className="bg-gray-500 text-white rounded px-4 py-2"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
+          {type === 'create' ? (
+            <>
+              <h2 className="text-lg font-semibold mb-4">Enter Board Name</h2>
+              <form onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  value={boardName}
+                  onChange={(e) => setBoardName(e.target.value)}
+                  className="border border-gray-300 rounded p-2 w-full mb-4"
+                  placeholder="Board Name"
+                  />
+                <div className="flex justify-end">
+                  <button
+                    type="submit"
+                    className="bg-blue-500 text-white rounded px-4 py-2 mr-2"
+                    >
+                    Create
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="bg-gray-500 text-white rounded px-4 py-2"
+                    >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </>
+          ) : (
+            <>
+              <p className="text-lg mb-2">Are you sure you want to <span className="font-semibold">delete</span> this board?</p>
+              <div className="flex w-full justify-evenly">
+                <button className="p-2 bg-green-500 text-white rounded-md px-6 hover:bg-green-600" onClick={onClick}>Yes</button>
+                <button className="p-2 bg-red-500 text-white rounded-md px-6 hover:bg-red-600" onClick={onClose}>No</button>
+              </div>
+            </>
+
+          )}
         </div>
       </div>
     );
-  };
+};
   
-const Board = ({board, onClick}) => {
+const Board = ({board, onClick, handleDeleteClick}) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const handleMouseEnter = () => setIsHovered(true);
+  const handleMouseLeave = () => setIsHovered(false);
+
     return(
       <div className="relative p-3">
-        <div className="boardButton" onClick={onClick}>
-            <div className="absolute top-0 right-0">
-              <button className="text-red-600">
-                <FontAwesomeIcon icon={faCircleXmark} className="bg-white rounded-full"/>
-              </button>
-            </div>
+        <div className="boardButton" 
+          onClick={onClick} 
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+        {isHovered && (
+          <div className="absolute top-0 right-0" onClick={handleDeleteClick}>
+            <button className="text-red-600">
+              <FontAwesomeIcon icon={faCircleXmark} className="bg-white rounded-full" />
+            </button>
+          </div>
+        )}
           {board.boardName}
         </div>
       </div>
@@ -71,6 +93,8 @@ const Board = ({board, onClick}) => {
 const BoardsList = ({navigate}) => {
     const [boardList, setBoardList] = useState([]);
     const [isPopupVisible, setPopupVisible] = useState(false);
+    const [isPopupDelVisible, setPopupDelVisible] = useState(false);
+    const [boardIdToDelete, setBoardIdToDelete] = useState(null);
     const {userId} = useUserStore();
     const {setBoardInfo} = useBoardStore(); 
 
@@ -110,10 +134,27 @@ const BoardsList = ({navigate}) => {
       if (userId && boardName) {
         await createBoard(userId, boardName);
         setPopupVisible(false);
-        const data = await getBoards(userId);
-        setBoards(data);
+        const data = await getBoardList(userId);
+        setBoardList(data);
       }
     };
+
+    const handleDeleteBoard = async (boardId) => {
+      try{
+        await databases.deleteDocument(
+          DATABASE_ID,
+          BOARDS_ID,
+          boardId
+        );
+        setPopupDelVisible(false);
+        setBoardIdToDelete(null);
+        const data = await getBoardList(userId);
+        setBoardList(data);
+      } catch(error){
+        console.error('Error deleting board:', error);
+      }
+
+    }
 
     useEffect(() => {
       const fetchBoardList = async () => {
@@ -150,15 +191,36 @@ const BoardsList = ({navigate}) => {
                           setBoardInfo(eachBoard);
                           navigate(`/board`);
                         }}
+                        handleDeleteClick={(e) => {
+                          e.stopPropagation(); // cause theres nested buttons in the board button
+                          setBoardIdToDelete(eachBoard.$id);
+                          setPopupDelVisible(true);
+                        }}
                         />
                     ))}
                 </ul>
+
+                {/* POPUP FOR BOARD CREATION */}
                 {isPopupVisible && (
-                  <BoardNamePopup
+                  <BoardPopup
+                    type='create'
                     onSubmit={handleCreateBoard}
                     onClose={() => setPopupVisible(false)}
                   />
                 )}
+
+                {/* POPUP FOR BOARD DELETION */}
+                {isPopupDelVisible && (
+                  <BoardPopup
+                    type='delete'
+                    onClick={()=>handleDeleteBoard(boardIdToDelete)}
+                    onClose={() => {
+                      setBoardIdToDelete(null);
+                      setPopupDelVisible(false);
+                    }}
+                  />
+                )}
+
               </>
             ) : <p>Loading...</p>
         }
