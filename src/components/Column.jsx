@@ -2,11 +2,13 @@ import { Draggable, Droppable } from "@hello-pangea/dnd";
 import TaskCard from "./TaskCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import useBoardStore from "../store/boardStore";
 
 const Column = (props) => {
     const index = props.index;
     const tasks = props.tasks;
     const id = props.id;
+    const {searchString} = useBoardStore();
     return(
         <Draggable draggableId={id} index={index}>
             {(provided)=>(
@@ -31,24 +33,31 @@ const Column = (props) => {
                                 </h2>
 
                                 <div className="space-y-2">
-                                    {tasks.map((task, index) => (
-                                        <Draggable
-                                            key={task.$id}
-                                            draggableId={task.$id}
-                                            index={index}
-                                        >
-                                            {(provided) => (
-                                                <TaskCard 
-                                                    // key={id}
-                                                    task={task} 
-                                                    index={index}
-                                                    innerRef={provided.innerRef}
-                                                    draggableProps={provided.draggableProps}
-                                                    dragHandleProps={provided.dragHandleProps}  
-                                                />
-                                            )}
-                                        </Draggable>
-                                    ))}
+                                    {tasks.map((task, index) => {
+                                        if(searchString && !task.taskTitle.toLowerCase().includes(searchString.toLowerCase())){
+                                            return null;
+                                        }
+
+                                        return(
+                                            <Draggable
+                                                key={task.$id}
+                                                draggableId={task.$id}
+                                                index={index}
+                                            >
+                                                {(provided) => (
+                                                    <TaskCard 
+                                                        // key={id}
+                                                        task={task} 
+                                                        index={index}
+                                                        innerRef={provided.innerRef}
+                                                        draggableProps={provided.draggableProps}
+                                                        dragHandleProps={provided.dragHandleProps}  
+                                                    />
+                                                )}
+                                            </Draggable>
+                                        )
+                                    }
+                                    )}
 
                                     <div className="flex items-end justify-end p-2">
                                         <button className="text-green-500 hover:text-green-600">

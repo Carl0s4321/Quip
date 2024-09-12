@@ -71,6 +71,9 @@ const useBoardStore = create(
                 }
             )
         },
+
+        searchString : "",
+        setSearchString : (searchString) => set({searchString}),
         
         }),
 

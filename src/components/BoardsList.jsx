@@ -96,7 +96,7 @@ const BoardsList = ({navigate}) => {
     const [isPopupDelVisible, setPopupDelVisible] = useState(false);
     const [boardIdToDelete, setBoardIdToDelete] = useState(null);
     const {userId} = useUserStore();
-    const {setBoardInfo} = useBoardStore(); 
+    const {setBoardInfo, searchString, setSearchString} = useBoardStore(); 
 
     const getBoardList = async (userId) => {
       try {
@@ -183,21 +183,29 @@ const BoardsList = ({navigate}) => {
                       }}
                     >+</div>
                   </div>
-                  { boardList.map(eachBoard => (
+                  { boardList.map(eachBoard => {
+                    if(searchString && !eachBoard.boardName.toLowerCase().includes(searchString.toLowerCase())){
+                        return null;
+                    }
+                    
+                    return(
                       <Board 
-                        key={eachBoard.$id}
-                        board={eachBoard}
-                        onClick={() => {
-                          setBoardInfo(eachBoard);
-                          navigate(`/board`);
-                        }}
-                        handleDeleteClick={(e) => {
-                          e.stopPropagation(); // cause theres nested buttons in the board button
-                          setBoardIdToDelete(eachBoard.$id);
-                          setPopupDelVisible(true);
-                        }}
-                        />
-                    ))}
+                      key={eachBoard.$id}
+                      board={eachBoard}
+                      onClick={() => {
+                        setBoardInfo(eachBoard);
+                        setSearchString("");
+                        navigate(`/board`);
+                      }}
+                      handleDeleteClick={(e) => {
+                        e.stopPropagation(); // cause theres nested buttons in the board button
+                        setBoardIdToDelete(eachBoard.$id);
+                        setPopupDelVisible(true);
+                      }}
+                      />
+                    )
+                    }
+                    )}
                 </ul>
 
                 {/* POPUP FOR BOARD CREATION */}

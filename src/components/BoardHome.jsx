@@ -15,7 +15,7 @@ import WheelMenu from "./WheelMenu";
 
 
 const BoardHome = () => {
-  const {clearBoardInfo, getBoard, board, setBoardColumns, updateTaskInDB} = useBoardStore();
+  const {clearBoardInfo, getBoard, board, setBoardColumns, updateTaskInDB, setSearchString} = useBoardStore();
 
   const navigate = useNavigate();
 
@@ -41,19 +41,20 @@ const BoardHome = () => {
       entries.splice(destination.index, 0, removed);
       const rearrangedColumns = new Map(entries);
       setBoardColumns(rearrangedColumns);
+      return;
     }
 
-    // console.log('source.droppableId', source.droppableId)
-    // console.log('Number(source.droppableId)', Number(source.droppableId))
-
+    
     // make copy for task dragging
     const columns =  Array.from(board.columns);
     const startColIndex = columns[Number(source.droppableId)];
     const finishColIndex = columns[Number(destination.droppableId)];
+    // console.log('source.droppableId', source.droppableId)
+    // console.log('Number(source.droppableId)', Number(source.droppableId))
 
-    // console.log('HERE', columns)
-    // console.log('startColIndex', startColIndex)
-    // console.log('finishColIndex', finishColIndex)
+    console.log('HERE', columns)
+    console.log('startColIndex', startColIndex)
+    console.log('finishColIndex', finishColIndex)
 
 
     const startCol= {
@@ -84,6 +85,8 @@ const BoardHome = () => {
       }
       const newColumns = new Map(board.columns);
       newColumns.set(startCol.id, newCol);
+
+      // console.log("newColumns ", newColumns)
 
       setBoardColumns(newColumns);
     }else{
@@ -125,6 +128,7 @@ const BoardHome = () => {
       <div className="flex flex-row">
         <FontAwesomeIcon icon={faArrowLeft} className='p-5 cursor-pointer'onClick={()=>{
           clearBoardInfo();
+          setSearchString('');
           navigate('/home')
           }}/>
 

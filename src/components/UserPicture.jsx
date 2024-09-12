@@ -21,9 +21,7 @@ const UserPicture = () => {
       }, [user]);
 
     return(
-            <img src={avatarUrl} alt={'avatar'} className="rounded-full" />
-        // <div className="">
-        // </div>
+            <img src={avatarUrl} alt={'avatar'} className="rounded-full border-lightBlue border-2" />
     )
 }
 export default UserPicture;
