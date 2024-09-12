@@ -255,8 +255,9 @@
   padding: 10px;
   direction: flex;
   text-align: center;
+  background-color: #2059f8;
+  color: white;
   font-size: 30px; /* equivalent to text-3xl */
-  color: white; /* text-white */
   cursor: pointer; /* cursor-pointer */
   border: 2px solid; /* border-2 */
   border-radius: 0.5rem; /* rounded-lg */
@@ -264,7 +265,6 @@
 }
 
 .boardButton:hover {
-  color: black;
-  background-color: white; /* hover:bg-white */
+  background-color: #1839a7;
 }
 

@@ -5,10 +5,14 @@ import { Query } from "appwrite";
 import { databases, DATABASE_ID, BOARDS_ID, ID} from '../lib/appwrite';
 
 import useBoardStore from "../store/boardStore";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { styles } from "../styles";
 
 const BoardNamePopup = ({ onSubmit, onClose }) => {
     const [boardName, setBoardName] = useState('');
-  
+    
+    
     const handleSubmit = (e) => {
       e.preventDefault();
       if (boardName.trim()) {
@@ -51,8 +55,15 @@ const BoardNamePopup = ({ onSubmit, onClose }) => {
   
 const Board = ({board, onClick}) => {
     return(
-      <div className="boardButton" onClick={onClick}>
-        {board.boardName}
+      <div className="relative p-3">
+        <div className="boardButton" onClick={onClick}>
+            <div className="absolute top-0 right-0">
+              <button className="text-red-600">
+                <FontAwesomeIcon icon={faCircleXmark} className="bg-white rounded-full"/>
+              </button>
+            </div>
+          {board.boardName}
+        </div>
       </div>
     )
   }  
@@ -121,14 +132,16 @@ const BoardsList = ({navigate}) => {
       <>
         {userId ? (
               <>
-                <h1>Boards</h1>
-                <ul className="grid w-full grid-cols-4 gap-5">
-                  <p
-                    className= "boardButton" 
-                    onClick={() => {
-                      setPopupVisible(true);
-                    }}
-                  >+</p>
+                <h1 className={`${styles.sectionSubText} font-semibold`}>Your Workspaces</h1>
+                <ul className="grid w-full grid-cols-1 md:grid-cols-4 gap-5 mt-4">
+                  <div className="relative p-3">
+                    <div
+                      className= "boardButton" 
+                      onClick={() => {
+                        setPopupVisible(true);
+                      }}
+                    >+</div>
+                  </div>
                   { boardList.map(eachBoard => (
                       <Board 
                         key={eachBoard.$id}

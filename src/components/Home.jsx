@@ -6,6 +6,8 @@ import { account} from '../lib/appwrite';
 
 import BoardsList from "./BoardsList";
 import { SectionWrapper } from "../hoc";
+import UserPicture from "./UserPicture";
+import Search from "./search";
 
 const Home = () =>{
     const { user, setIsAuthenticated, clearUser} = useUserStore(); 
@@ -25,11 +27,24 @@ const Home = () =>{
 
     return(
       <>
-        <div className={`${styles.padding} bg-slate-700`}>
-            <h1>Welcome to the Home Page</h1>
-            <p>Welcome back, {user?.name}!</p>
+        <div className={`${styles.padding}`}>
+            <div className="flex flex-row w-full justify-between mb-2 pb-4 items-center">
+              <div className="flex flex-col">
+                <p className={`${styles.sectionHeadText}  mb-0 pb-0`}>Hello, {user?.name}</p>
+                <p className={`${styles.sectionSubText} text-gray-500`}>Let's be productive & Quality today</p>
+              </div>
 
+              <div className='sm:hidden block w-14'>
+                <UserPicture/>
+              </div>
+
+            </div>
+
+            <Search placeholder="Search Boards..."/>
+
+            <div className="mt-6">
             <BoardsList navigate={navigate}/>
+            </div>
 
             <button
             type="button"
@@ -40,7 +55,7 @@ const Home = () =>{
 
             
         </div>
-        <WheelMenu/>
+        {/* <WheelMenu/> */}
       </>
     )
 }

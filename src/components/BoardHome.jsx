@@ -10,6 +10,8 @@ import { Query } from "appwrite";
 import { DragDropContext,Droppable, Draggable } from "@hello-pangea/dnd";
 
 import useBoardStore from "../store/boardStore";
+import Search from "./search";
+import WheelMenu from "./WheelMenu";
 
 
 const BoardHome = () => {
@@ -134,6 +136,8 @@ const BoardHome = () => {
           <p>board id: {board.boardInfo.$id}</p>
           <p>board creator user id: {board.boardInfo.creatorId}</p>
 
+          <Search placeholder="Search Task..."/>
+
           <div className="mt-5">
             <DragDropContext onDragEnd={handleOnDragEnd} >
               <Droppable droppableId="board" type="column" direction="horizontal">
@@ -159,6 +163,7 @@ const BoardHome = () => {
           </div>
 
         </div>
+        <WheelMenu/>
       </div>
 
     </div>
