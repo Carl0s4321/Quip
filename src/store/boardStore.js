@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { fetchTasksByColumn } from '../lib/fetchTasksByColumn';
+import { DATABASE_ID, databases, TASKS_ID } from '../lib/appwrite';
 
 const useBoardStore = create(
   persist(
@@ -39,6 +40,13 @@ const useBoardStore = create(
                 },
             },
         })),
+        // function to set columns within board
+        setBoardColumns: (columns) => set((state) => ({
+            board: {
+                ...state.board, // keep existing board state (boardInfo)
+                columns: columns,
+            },
+        })),
 
         getBoard: async () => {
             const columns = await fetchTasksByColumn();
@@ -50,7 +58,23 @@ const useBoardStore = create(
                 },
             }));
         },
+
+        updateTaskInDB: async(task, columnId, boardId) => {
+            await databases.updateDocument(
+                DATABASE_ID,
+                TASKS_ID,
+                task.$id,
+                {
+                    taskTitle:task.taskTitle,
+                    status: columnId,
+                    boardId: boardId,
+                }
+            )
+        },
+        
         }),
+
+
     {
       name: 'board-storage',  // name of the item in the storage (must be unique)
       //local storage is used for storage

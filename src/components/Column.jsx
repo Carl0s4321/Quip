@@ -1,5 +1,7 @@
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import TaskCard from "./TaskCard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 
 const Column = (props) => {
     const index = props.index;
@@ -13,7 +15,7 @@ const Column = (props) => {
                     {...provided.draggableProps} 
                     {...provided.dragHandleProps}
                 >
-                    <Droppable droppableId={`droppable-` + index} type="card">
+                    <Droppable droppableId={index.toString()} type="card">
                         {(provided, snapshot) => (
                             <div
                                 {...provided.droppableProps} 
@@ -48,9 +50,9 @@ const Column = (props) => {
                                         </Draggable>
                                     ))}
 
-                                    <div>
-                                        <button>
-                                            +
+                                    <div className="flex items-end justify-end p-2">
+                                        <button className="text-green-500 hover:text-green-600">
+                                            <FontAwesomeIcon className="h-10 w-10" icon={faCirclePlus}/>
                                         </button>
                                     </div>
                                 </div>
