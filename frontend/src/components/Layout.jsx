@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom"
-import  { Navbar } from "./Navbar"
+// import  { Navbar } from "./Navbar"
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 
@@ -15,7 +15,7 @@ export function Layout() {
 
     return(
         <>
-            <Navbar/>
+            {/* <Navbar/> */}
             <div className="m-5 mx-10 md:mx-20">
                 <Outlet/>
             </div>

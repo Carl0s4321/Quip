@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createUser } from "../api";
 import { useNavigate } from "react-router-dom";
 // import {useUserStore} from '../src/store/userStore'
@@ -14,6 +14,14 @@ export function CreateUser() {
     email: "",
     password: "",
   });
+
+  useEffect(()=>{
+    const emailInput = JSON.parse(localStorage.getItem('emailInput'));
+    if(emailInput){
+      setUser({...user, email:emailInput})
+    }
+    localStorage.removeItem('emailInput')
+  }, [])
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -69,6 +77,7 @@ export function CreateUser() {
 
         }}
         name="email"
+        value={user.email}
       />
       <input
         type="password"

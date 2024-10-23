@@ -44,23 +44,23 @@ const testimonials = [
     {
       testimonial:
         "[Quip is] great for simplifying complex processes. As a manager, I can chunk [processes] down into bite-sized pieces for my team and then delegate that out, but still keep a bird's-eye view.",
-      name: "Joey Rosenberg",
-      designation: "Global Leadership Director at Women Who Code",
-      image: "https://media.licdn.com/dms/image/D5603AQGnMWg-dv9v5Q/profile-displayphoto-shrink_200_200/0/1694041555679?e=2147483647&v=beta&t=Yk_xFQUyMj6J3L7y6Q5ThBDqR-U42AUFaptFRegu_vI",
+      name: "Ben Dover",
+      designation: "Global Leadership Director at xyz Company",
+      image: "https://t3.ftcdn.net/jpg/02/22/85/16/360_F_222851624_jfoMGbJxwRi5AWGdPgXKSABMnzCQo9RN.jpg",
     },
     {
       testimonial:
         "Whether someone is in the office, working from home, or working on-site with a client, everyone can share context and information through Quip.",
-      name: "Sumeet Moghe",
-      designation: "Product Manager at ThoughtWorks",
-      image: "https://media.licdn.com/dms/image/D4D03AQHD9FsarLL10Q/profile-displayphoto-shrink_200_200/0/1684987179834?e=2147483647&v=beta&t=9-EJOeWY_8NOV8GeVTQqvxPoG9X1f5cKSxDPduFsXFE",
+      name: "John Doe",
+      designation: "Product Manager at 123 Corp.",
+      image: "https://st2.depositphotos.com/3776273/44464/i/450/depositphotos_444643918-stock-photo-close-up-of-handsome-confident.jpg",
     },
     {
       testimonial:
         "We used Quip to provide clarity on steps, requirements, and procedures. This was exceptional when communicating with teams that had deep cultural and language differences.",
-      name: "Jefferson Scomacao",
-      designation: "Development Manager at IKEA/PTC",
-      image: "https://media.licdn.com/dms/image/D4D03AQEPoyEavd7waw/profile-displayphoto-shrink_200_200/0/1699911829799?e=2147483647&v=beta&t=MeI0gTXLtNEEE1xBwZxCfArJ_SK5wezlX0JKe_juy10",
+      name: "Jane Smith",
+      designation: "Development Manager at fake company",
+      image: "https://www.shutterstock.com/image-photo/business-woman-holding-out-hand-260nw-30893854.jpg",
     },
   ];
 

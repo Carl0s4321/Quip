@@ -1,9 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import { loginUser } from "../api";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-// TODO: add moonloader from react spinners
 
 export function LogIn() {
   const navigate = useNavigate();

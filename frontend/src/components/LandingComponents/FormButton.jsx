@@ -11,14 +11,12 @@ export const FormButton = () => {
       };
 
     const handleAuthClick = () => {
-        const state = { showSignUp: true };
-        if (email && isValidEmail(email)) {
-          state.haveEmail = email;
-        } else if (email) {
+        if (email && !isValidEmail(email)) {
             alert('Please enter a valid email address.');
             return;
-          }
-        navigate('/auth', { state });
+        }
+        localStorage.setItem('emailInput', JSON.stringify(email))
+        navigate('auth');
     };
 
     return(

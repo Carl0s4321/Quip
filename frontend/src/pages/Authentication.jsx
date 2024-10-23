@@ -1,12 +1,16 @@
 import { useState } from "react"
 import { CreateUser } from "../components/CreateUser"
 import { LogIn } from "../components/LogIn"
+import { authLeft, authRight } from "../assets";
 
 export function Authentication() {
-    const [isSignUp, setIsSignUp] = useState(false);
+    const [isSignUp, setIsSignUp] = useState(true);
     return (
-        <div className='authWrapper'>
-            <div className={`container ${isSignUp ? 'active' : ''}`}>
+        <div className='mx-10 p-20 flex gap-x-20 h-[100vh] justify-center items-center'>
+            <div className="flex  w-full h-full">
+                <img className="w-full h-full" src={authLeft}/>
+            </div>
+            <div className={`grow shrink-0 h-14 container ${isSignUp ? 'active' : ''}`}>
                 {/* <div className={`form-container ${isSignUp? 'sign-up' : 'sign-in'}`}>
                     {isSignUp? <CreateUser/> : <LogIn/>}
                 </div> */}
@@ -28,6 +32,9 @@ export function Authentication() {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="flex w-full h-full">
+                <img className="w-full h-full" src={authRight}/>
             </div>
         </div>
     )

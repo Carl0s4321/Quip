@@ -1,5 +1,7 @@
 import logo from './logo.svg';
 import logoWhite from './logoWhite.svg'
+import logoShort from './logoShort.png'
+
 import heropic from './TrelloUICollage_4x.png'
 import brands from './logos-horizontal-visa-coinbase-john-deere-zoom-grand-hyatt-fender.svg'
 import brandsMobile from './logos-3x3-visa-coinbase-john-deere-zoom-grand-hyatt-fender.svg'
@@ -20,6 +22,7 @@ import book from './icon-object-book_2x.png'
 export {
     logo,
     logoWhite,
+    logoShort,
     heropic,
     brands,
     brandsMobile,

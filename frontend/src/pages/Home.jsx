@@ -1,6 +1,6 @@
 import {jwtDecode} from "jwt-decode";
 import { useEffect, useState } from "react";
-import { getGeoCoordinates } from "../src/api";
+import Sidebar from "../components/Sidebar";
 
 export function Home() {
     // const [user, setUser] = useState(null);
@@ -13,24 +13,11 @@ export function Home() {
     //     loadUserData();
     // }, [])
 
-    function handleClick(){
-        const response = getGeoCoordinates('Edmonton Trail NE')
-        if(response.success){
-            console.log('returned', response)
-        }else{
-            console.error(response)
-        }
-    }
-
 
 
     return(
         <>
-
-               <div className="font-proxima">
-                    Hi
-                </div>
-                <button onClick={handleClick}>click me</button>
+        <Sidebar/>
             {/* {user && (
                <div className="font-proxima">
                     Hi {user.name}
