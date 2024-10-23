@@ -1,0 +1,83 @@
+@keyframes gradientAnimation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* Media query for smaller screens */
+@media (max-width: 768px) {
+    .waves {
+      height: 40px; /* Reducing wave height on mobile */
+      min-height: 40px;
+    }
+    .content {
+      height: 30vh; /* Adjusting content height for smaller screens */
+    }
+    h1 {
+      font-size: 24px; /* Smaller font size for mobile devices */
+    }
+  }
+
+  .waves {
+    position: relative;
+    width: 100%; /* Full width */
+    height: 15vh; /* The height is 15% of the viewport */
+    margin-bottom: -7px; /* Fixes a gap issue for Safari */
+    min-height: 100px; /* Minimum height */
+    max-height: 150px; /* Maximum height */
+  }
+  
+  /* Animation for wave parallax */
+  .wave-parallax > use {
+    /* Infinite animation to move the waves */
+    animation: move-forever 25s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
+  }
+  
+  /* Animating different wave layers at varying speeds */
+  .wave-parallax > use:nth-child(1) {
+    animation-delay: -2s; /* Delayed by 2 seconds */
+    animation-duration: 7s; /* Animation duration is 7 seconds */
+  }
+  .wave-parallax > use:nth-child(2) {
+    animation-delay: -3s; /* Delayed by 3 seconds */
+    animation-duration: 10s; /* Animation duration is 10 seconds */
+  }
+  .wave-parallax > use:nth-child(3) {
+    animation-delay: -4s; /* Delayed by 4 seconds */
+    animation-duration: 13s; /* Animation duration is 13 seconds */
+  }
+  .wave-parallax > use:nth-child(4) {
+    animation-delay: -5s; /* Delayed by 5 seconds */
+    animation-duration: 20s; /* Animation duration is 20 seconds */
+  }
+  
+  /* Animation for the wave movement */
+  @keyframes move-forever {
+    0% {
+      transform: translate3d(-90px, 0, 0); /* Starting position */
+    }
+    100% {
+      transform: translate3d(85px, 0, 0); /* Ending position */
+    }
+  }
+  
+  .animated-gradient {
+    background: linear-gradient(to right, #8b5cf6, #ec4899, #ef4444);
+    background-size: 200% 200%;
+    animation: gradientAnimation 8s ease infinite;
+  }
+
+  .waves {
+    position: relative;
+    width: 100%;
+    height: 10vh;
+    min-height: 80px;
+    max-height: 150px;
+    margin-bottom: -7px;
+}
