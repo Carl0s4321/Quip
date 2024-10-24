@@ -6,6 +6,7 @@ import { Authentication } from '../src/pages/Authentication';
 import axios from 'axios';
 import { Layout } from './components/Layout';
 import { Home } from './pages/Home';
+import {Profile} from './pages/Profile'
 
 function App() {
 
@@ -24,7 +25,7 @@ function App() {
       <Route path='auth' element={<Authentication/>}/>
       <Route element={<Layout/>}>
         <Route path="/home" element={<Home/>}/>
-        {/* <Route path="/profile" element={<Profile/>}/> */}
+        <Route path="/profile" element={<Profile/>}/>
       </Route>
      </Routes>
     </Router>

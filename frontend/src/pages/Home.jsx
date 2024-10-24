@@ -17,7 +17,7 @@ export function Home() {
 
     return(
         <>
-        <Sidebar/>
+        HOME
             {/* {user && (
                <div className="font-proxima">
                     Hi {user.name}

@@ -2,23 +2,36 @@ import { Outlet } from "react-router-dom"
 // import  { Navbar } from "./Navbar"
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
+import "./sidebar.css"
+import Sidebar from "./Sidebar"
+import useUserStore from "../store/UserStore"
+import { jwtDecode } from "jwt-decode"
 
 export function Layout() {
-    let user = sessionStorage.getItem("User")
     const navigate = useNavigate()
+    const {setUser, user} = useUserStore()
 
     useEffect(()=>{
-        if(!user){
-            navigate("/")
+        const user_SS = sessionStorage.getItem("User");
+        if (!user_SS) {
+          navigate("/");
+        } else {
+          setUser(jwtDecode(user_SS));
         }
-    }, [user])
+        console.log(user)
+    }, [])
 
     return(
         <>
             {/* <Navbar/> */}
             <div className="m-5 mx-10 md:mx-20">
-                <Outlet/>
+                <Sidebar/>
+                <section className="home-section">
+                    <Outlet/>
+                    {/* <div className="text">Dashboard</div> */}
+                </section>
             </div>
+
         </>
     )
 }

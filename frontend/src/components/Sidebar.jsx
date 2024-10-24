@@ -1,49 +1,31 @@
 import './sidebar.css'
 import { useState } from 'react';
 import {logoShort} from '../assets'
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Sidebar(){
-    // Get the sidebar, close button, and search button elements
-    // let sidebar = document.querySelector(".sidebar");
     const [isOpen, setIsOpen] = useState(false)
-    // let closeBtn = document.querySelector("#btn");
-    // let searchBtn = document.querySelector(".bx-search");
-    // let navList = document.querySelector(".nav-list");
+    const navigate = useNavigate();
 
-    // // Event listener for the menu button to toggle the sidebar open/close
-    // closeBtn.addEventListener("click", () => {
-    // sidebar.classList.toggle("open"); // Toggle the sidebar's open state
-    // navList.classList.toggle("scroll"); // Toggle scroll state
-    // menuBtnChange(); // Call function to change button icon
-    // });
+    function handleLogout(){
+      sessionStorage.removeItem("User")
+      delete axios.defaults.headers.common["Authorization"];
+      navigate("/")
+  }
 
-    // // Event listener for the search button to open the sidebar
-    // searchBtn.addEventListener("click", () => {
-    // sidebar.classList.toggle("open");
-    // navList.classList.toggle("scroll");
-    // menuBtnChange(); // Call function to change button icon
-    // });
-
-    // // Function to change the menu button icon
-    // function menuBtnChange() {
-    // if (sidebar.classList.contains("open")) {
-    //     closeBtn.classList.replace("bx-menu", "bx-menu-alt-right"); // Change icon to indicate closing
-    // } else {
-    //     closeBtn.classList.replace("bx-menu-alt-right", "bx-menu"); // Change icon to indicate opening
-    // }
-    // }
     return(
         <>
         
         <div className={`${isOpen? 'open' : ''} sidebar`}>
           <div className="logo-details">
             <div className="logo_name">Quip</div>
-            <i onClick={()=>{setIsOpen(!isOpen)}} className='bx bx-menu' id="btn"></i>
+            <i onClick={()=>{setIsOpen(!isOpen)}} className={`${isOpen? 'bx-menu-alt-right' : 'bx-menu'} bx`} id="btn"></i>
           </div>
           <ul className="nav-list">
             
             <li>
-              <a href="#">
+              <a onClick={()=>{navigate("/home")}}>
                 <i className='bx bx-grid-alt'></i>
                 <span className="links_name">Dashboard</span>
               </a>
@@ -51,14 +33,14 @@ function Sidebar(){
             </li>
             
             <li>
-              <a href="#">
+              <a onClick={()=>{navigate("/profile")}}>
                 <i className='bx bx-user'></i>
                 <span className="links_name">User</span>
               </a>
               <span className="tooltip">User</span>
             </li>
             <li>
-              <a href="#">
+              <a>
                 <i className='bx bx-chat'></i>
                 <span className="links_name">Messages</span>
               </a>
@@ -66,7 +48,7 @@ function Sidebar(){
             </li>
         
             <li>
-              <a href="#">
+              <a>
                 <i className='bx bx-heart'></i>
                 <span className="links_name">Saved</span>
               </a>
@@ -74,7 +56,7 @@ function Sidebar(){
             </li>
 
             <li>
-              <a href="#">
+              <a>
                 <i className='bx bx-cog'></i>
                 <span className="links_name">Setting</span>
               </a>
@@ -90,14 +72,10 @@ function Sidebar(){
                   <div className="job">user email</div>
                 </div>
               </div>
-              <i className='bx bx-log-out' id="log_out"></i> 
+              <i className='bx bx-log-out cursor-pointer' id="log_out" onClick={handleLogout}/>
             </li>
           </ul>
         </div>
-
-        <section className="home-section">
-          <div className="text">Dashboard</div>
-        </section>
 
         </>
     )

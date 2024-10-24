@@ -1,30 +1,31 @@
-import { updateUser, deleteUser} from "../src/api";
+import { updateUser, deleteUser} from "../api";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faPencil } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import useUserStore from "../store/UserStore";
 
 export function Profile() {
-  const [user, setUser] = useState({name: "", email: "" });
+  const [userS, setUserS] = useState({name: "", email: "" });
   const [editable, setEditable] = useState(false);
   const navigate = useNavigate();
+  const {user} = useUserStore();
   useEffect(() => {
-    const user_SS = sessionStorage.getItem("User");
-    if (!user_SS) {
-      navigate("/");
-    } else {
-      setUser(jwtDecode(user_SS));
+    if(user){
+      setUserS(user)
     }
+
+
   }, []);
 
   function handleChange(e) {
-    setUser({ ...user, [e.target.name]: e.target.value });
+    setUserS({ ...userS, [e.target.name]: e.target.value });
   }
 
   function handleDelete(){
-    const response = deleteUser(user._id)
+    const response = deleteUser(userS._id)
     sessionStorage.removeItem("User")
     delete axios.defaults.headers.common["Authorization"];
     navigate("/")
@@ -32,11 +33,11 @@ export function Profile() {
 
   async function handleSubmit(e){
     e.preventDefault()
-    const response = await updateUser(user._id, user)
+    const response = await updateUser(userS._id, userS)
     // console.log(response)
     if(response.data.success){
         sessionStorage.setItem("User", response.data.token)
-        setUser(jwtDecode(response.data.token))
+        setUserS(jwtDecode(response.data.token))
     }
     setEditable(!editable)
   }
@@ -69,7 +70,7 @@ export function Profile() {
                   : "border-gray-300 bg-gray-100"
               }`}
               disabled={!editable}
-              value={user.name}
+              value={userS.name}
               name="name"
               onChange={(e)=>{
                 handleChange(e);
@@ -87,7 +88,7 @@ export function Profile() {
                   : "border-gray bg-gray-100"
               }`}
               disabled={!editable}
-              value={user.email}
+              value={userS.email}
               name="email"
               onChange={(e)=>{
                 handleChange(e);
