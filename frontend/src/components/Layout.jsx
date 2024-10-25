@@ -11,15 +11,22 @@ export function Layout() {
     const navigate = useNavigate()
     const {setUser, user} = useUserStore()
 
-    useEffect(()=>{
+    useEffect(() => {
         const user_SS = sessionStorage.getItem("User");
         if (!user_SS) {
-          navigate("/");
+          navigate("/"); // If no user in sessionStorage, navigate to login
         } else {
-          setUser(jwtDecode(user_SS));
+          const decodedUser = jwtDecode(user_SS);
+          setUser(decodedUser); // Set user state in Zustand
         }
-        console.log(user)
-    }, [])
+      }, [navigate, setUser]); // Add setUser as a dependency
+    
+      // This log will always reflect the latest user state
+      useEffect(() => {
+        if (user) {
+          console.log("User data updated:", user);
+        }
+      }, [user]); // Add user as a dependency to log when user updates
 
     return(
         <>

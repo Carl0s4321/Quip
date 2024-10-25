@@ -40,7 +40,12 @@ export async function loginUser(user){
 
 }
 
-export async function getGeoCoordinates(address){
-    const response = await axios.get(`${URL}/geocode/${encodeURIComponent(address)}`)
-    return response
+export async function getBoards(userId) {
+    const response = await axios.get(`${URL}/boards/${userId}`);
+
+    if(response.status === 200){
+        return response.data
+    }else{
+        return
+    }
 }

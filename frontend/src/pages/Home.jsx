@@ -1,28 +1,13 @@
 import {jwtDecode} from "jwt-decode";
 import { useEffect, useState } from "react";
-import Sidebar from "../components/Sidebar";
+import Boards from "../components/boards";
 
 export function Home() {
-    // const [user, setUser] = useState(null);
-
-    // useEffect(() => {
-    //     function loadUserData(){
-    //         const token = sessionStorage.getItem("User")
-    //         setUser(jwtDecode(token))
-    //     }   
-    //     loadUserData();
-    // }, [])
-
-
 
     return(
         <>
         HOME
-            {/* {user && (
-               <div className="font-proxima">
-                    Hi {user.name}
-                </div>
-            )}       */}
+        <Boards/>
         </>
         )
 }
