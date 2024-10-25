@@ -2,37 +2,46 @@ import { useEffect, useState } from "react";
 import { getBoards } from "../api";
 import useUserStore from "../store/UserStore";
 
+function Board({board}){
+    return(
+        <>
+        a
+        <p>{board.boardName}</p>
+        </>
+    )
+}
+
 function Boards() {
-    const {user} = useUserStore();
-    const [boards, setBoards] = useState([]);
+  const { user } = useUserStore();
+  const [boards, setBoards] = useState([]);
 
-    useEffect(() => {
-        const fetchBoards = async () => {
-            if (user) {
-                try {
-                    const response = await getBoards(user._id); // Await the Promise
-                    console.log("Boards response:", response); // Log the response
-                    setBoards(response); // Set boards with the resolved response
-                } catch (error) {
-                    console.error("Error fetching boards:", error);
-                }
-            }
-        };
+  useEffect(() => {
+    const fetchBoards = async () => {
+      setBoards([]); // clear previous boards
+      if (user) {
+        try {
+          const response = await getBoards(user._id);
+          setBoards(response);
+        } catch (error) {
+          console.error("Error fetching boards:", error);
+        }
+      }
+    };
 
-        fetchBoards(); // Call the async function inside useEffect
-    }, [user]); // Include user in dependency array
+    fetchBoards();
+  }, [user]);
 
-    // useEffect(()=>{
-    //     console.log("BOARDS", boards)
-    // }, [boards])
-  return(
+  return (
     <>
-    qqqertgyhtj
-        {boards.map((board, index)=> (
-            <p>{board.boardName}</p>
-        ))}
+      qqqertgyhtj
+      {boards.length > 0 ? (
+        boards.map((board, index) => <p key={index}><Board board={board}/></p>)
+      ) : (
+        <></>
+        // no boards found
+      )}
     </>
-  )   
+  );
 }
 
 export default Boards;

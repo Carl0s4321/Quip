@@ -14,19 +14,12 @@ export function Layout() {
     useEffect(() => {
         const user_SS = sessionStorage.getItem("User");
         if (!user_SS) {
-          navigate("/"); // If no user in sessionStorage, navigate to login
+          navigate("/");
         } else {
           const decodedUser = jwtDecode(user_SS);
-          setUser(decodedUser); // Set user state in Zustand
+          setUser(decodedUser); 
         }
-      }, [navigate, setUser]); // Add setUser as a dependency
-    
-      // This log will always reflect the latest user state
-      useEffect(() => {
-        if (user) {
-          console.log("User data updated:", user);
-        }
-      }, [user]); // Add user as a dependency to log when user updates
+      }, []);
 
     return(
         <>
