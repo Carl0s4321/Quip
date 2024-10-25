@@ -1,0 +1,17 @@
+.board {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 15rem; /* 40 units in Tailwind */
+    background-color: #2059f8; /* lightBlue */
+    padding: 1.25rem 2.5rem; /* 5 units in y, 10 units in x */
+    color: white;
+    font-size: 1.25rem; /* text-xl */
+    border-radius: 0.75rem; /* rounded-xl */
+    cursor: pointer;
+    transition: background-color 0.3s; /* optional for smooth hover effect */
+}
+
+.board:hover {
+    background-color: #000DAC; /* darkBlue */
+}
