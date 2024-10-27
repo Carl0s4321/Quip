@@ -8,6 +8,8 @@ require("dotenv").config({path: "./config.env"})
 let boardRoutes = express.Router();
 const SALT = 6;
 const BOARD_COLLECTION_NAME = "boards"
+const COLUMN_COLLECTION_NAME = "columns"
+const TASK_COLLECTION_NAME = "tasks"
 
 // make CRUD operations:
 // retrieve all board relating to a user
@@ -28,13 +30,56 @@ boardRoutes.route('/users/:userId/boards').get(verifyToken, async (request,respo
 // retrieve specific board
 // http://localhost:3000/boards/:boardId
 boardRoutes.route('/boards/:boardId').get(verifyToken, async (request,response) => {
-    let db = database.getDb();
-    let data = await db.collection(BOARD_COLLECTION_NAME).findOne({_id: new ObjectId(request.params.boardId)})
-    // since data should only be one object, we check if the object is empty or not
-    if(Object.keys(data).length > 0){
-        response.json(data);
-    } else{
-        throw new Error("Data not found")
+    try {
+        const db = database.getDb();
+        
+        const board = await db.collection(BOARD_COLLECTION_NAME).findOne({_id: new ObjectId(request.params.boardId)});
+        
+        if (!board) {
+            return response.status(404).json({ error: "Board not found" });
+        }
+        // console.log('board response', board)
+        
+        
+        // get columns related to each board
+        const columns = await db.collection(COLUMN_COLLECTION_NAME).find({ boardId: board._id.toString() }).toArray();
+        console.log('column response', columns)
+
+        const columnsObject = {};
+
+        columns.forEach(column => {
+            columnsObject[column._id] = {
+                id: column._id.toString(),
+                title: column.title,
+                taskIds: column.taskIds || [], 
+            };
+        });
+
+        // get tasks relatef to each column
+        const tasks = await db.collection(TASK_COLLECTION_NAME).find({ columnId: { $in: Object.keys(columnsObject) } }).toArray();
+
+        const tasksObject = {};
+        tasks.forEach(task => {
+            tasksObject[task._id] = {
+                id: task._id.toString(),
+                content: task.content,
+            };
+        });
+
+        const responseBody = {
+            _id: board._id,
+            name: board.name,
+            creatorId: board.creatorId,
+            invitedUsers: board.invitedUsers || [],
+            tasks: tasksObject,
+            columns: columnsObject,
+            columnOrder: board.columnOrder,
+        };
+
+        response.json(responseBody);
+    } catch (error) {
+        console.error("Error fetching board data:", error);
+        response.status(500).json({ error: "Internal server error" });
     }
 })
 

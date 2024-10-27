@@ -8,32 +8,43 @@ function BoardHome() {
   const { boardId } = useParams();
   const [boardInfo, setBoardInfo] = useState({});
 
+  //   const [initData, setInitData] = useState({
+  //     tasks: {
+  //       "task-1": { id: "task-1", content: "Take out garbage" },
+  //       "task-2": { id: "task-2", content: "Watch show" },
+  //       "task-3": { id: "task-3", content: "Charge phone" },
+  //       "task-4": { id: "task-4", content: "Cook dinner" },
+  //     },
+  //     columns: {
+  //       "column-1": {
+  //         id: "column-1",
+  //         title: "To Do",
+  //         taskIds: ["task-1", "task-2", "task-3", "task-4"],
+  //       },
+  //       "column-2": {
+  //         id: "column-2",
+  //         title: "In Progress",
+  //         taskIds: [],
+  //       },
+  //       "column-3": {
+  //         id: "column-3",
+  //         title: "Done",
+  //         taskIds: [],
+  //       },
+  //     },
+
+  //     columnOrder: ["column-1", "column-2", "column-3"],
+  //   });
+
   const [initData, setInitData] = useState({
     tasks: {
-      "task-1": { id: "task-1", content: "Take out garbage" },
-      "task-2": { id: "task-2", content: "Watch show" },
-      "task-3": { id: "task-3", content: "Charge phone" },
-      "task-4": { id: "task-4", content: "Cook dinner" },
+      
     },
     columns: {
-      "column-1": {
-        id: "column-1",
-        title: "To Do",
-        taskIds: ["task-1", "task-2", "task-3", "task-4"],
-      },
-      "column-2": {
-        id: "column-2",
-        title: "In Progress",
-        taskIds: [],
-      },
-      "column-3": {
-        id: "column-3",
-        title: "Done",
-        taskIds: [],
-      },
+      
     },
 
-    columnOrder: ["column-1", "column-2", "column-3"],
+    columnOrder: [],
   });
 
   useEffect(() => {
@@ -41,8 +52,9 @@ function BoardHome() {
       setBoardInfo([]);
       try {
         const response = await getBoard(boardId);
+        console.log("response", response);
         setBoardInfo(response);
-        // console.log(response);
+        setInitData(response);
       } catch (error) {
         console.error("Error fetching boards:", error);
       }
@@ -52,7 +64,7 @@ function BoardHome() {
   }, [boardId]);
 
   function onDragEnd(result) {
-    const { destination, source, draggableId, type} = result;
+    const { destination, source, draggableId, type } = result;
 
     console.log(result);
 
@@ -70,18 +82,18 @@ function BoardHome() {
     }
 
     // moving column
-    if(type === "column"){
-        const newColumnOrder = Array.from(initData.columnOrder)
-        newColumnOrder.splice(source.index, 1)
-        newColumnOrder.splice(destination.index, 0, draggableId)
+    if (type === "column") {
+      const newColumnOrder = Array.from(initData.columnOrder);
+      newColumnOrder.splice(source.index, 1);
+      newColumnOrder.splice(destination.index, 0, draggableId);
 
-        const newInitData={
-            ...initData,
-            columnOrder: newColumnOrder,
-        }
+      const newInitData = {
+        ...initData,
+        columnOrder: newColumnOrder,
+      };
 
-        setInitData(newInitData)
-        return;
+      setInitData(newInitData);
+      return;
     }
 
     const start = initData.columns[source.droppableId];
@@ -141,7 +153,7 @@ function BoardHome() {
 
   return (
     <>
-      <h1 className="text-2xl font-semibold">{boardInfo.boardName}</h1>
+      <h1 className="text-2xl font-semibold">{boardInfo.name}</h1>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable
           droppableId="all-columns"
