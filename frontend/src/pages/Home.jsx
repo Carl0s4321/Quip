@@ -1,6 +1,6 @@
 import {jwtDecode} from "jwt-decode";
 import { useEffect, useState } from "react";
-import Boards from "../components/Boards";
+import Boards from "../components/BoardComponents/Boards";
 import SearchBar from "../components/SearchBar";
 
 export function Home() {
