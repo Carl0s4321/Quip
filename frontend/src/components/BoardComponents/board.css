@@ -2,7 +2,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 15rem; /* 40 units in Tailwind */
+    overflow-wrap: break-word;
+    max-width: 100%;
+    flex-grow: 1;
+    flex-shrink: 1;
     background-color: #2059f8; /* lightBlue */
     padding: 1.25rem 2.5rem; /* 5 units in y, 10 units in x */
     color: white;

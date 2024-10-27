@@ -7,6 +7,7 @@ import axios from 'axios';
 import { Layout } from './components/Layout';
 import { Home } from './pages/Home';
 import {Profile} from './pages/Profile'
+import BoardHome from './components/BoardComponents/BoardHome';
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
       <Route element={<Layout/>}>
         <Route path="/home" element={<Home/>}/>
         <Route path="/profile" element={<Profile/>}/>
+        <Route path="/board/:boardId" element={<BoardHome />} />
       </Route>
      </Routes>
     </Router>

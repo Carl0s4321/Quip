@@ -41,7 +41,17 @@ export async function loginUser(user){
 }
 
 export async function getBoards(userId) {
-    const response = await axios.get(`${URL}/boards/${userId}`);
+    const response = await axios.get(`${URL}/users/${userId}/boards`);
+
+    if(response.status === 200){
+        return response.data
+    }else{
+        return
+    }
+}
+
+export async function getBoard(boardId) {
+    const response = await axios.get(`${URL}/boards/${boardId}`);
 
     if(response.status === 200){
         return response.data

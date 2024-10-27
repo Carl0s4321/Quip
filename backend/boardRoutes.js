@@ -10,11 +10,11 @@ const SALT = 6;
 const BOARD_COLLECTION_NAME = "boards"
 
 // make CRUD operations:
-// retrieve all
-// http://localhost:3000/boards/userId
+// retrieve all board relating to a user
+// http://localhost:3000/users/:userId/boards
 
 // do verifyToken, if token is verified we run the get function otherwise throw error.
-boardRoutes.route('/boards/:userId').get(verifyToken, async (request,response) => {
+boardRoutes.route('/users/:userId/boards').get(verifyToken, async (request,response) => {
     let db = database.getDb();
     let data = await db.collection(BOARD_COLLECTION_NAME).find({creatorId: request.params.userId}).toArray();
 
@@ -25,18 +25,18 @@ boardRoutes.route('/boards/:userId').get(verifyToken, async (request,response) =
     }
 })
 
-// // retrieve one
-// // http://localhost:3000/users/12345
-// boardRoutes.route('/users/:id').get(verifyToken, async (request,response) => {
-//     let db = database.getDb();
-//     let data = await db.collection(BOARD_COLLECTION_NAME).findOne({_id: new ObjectId(request.params.id)})
-//     // since data should only be one object, we check if the object is empty or not
-//     if(Object.keys(data).length > 0){
-//         response.json(data);
-//     } else{
-//         throw new Error("Data not found")
-//     }
-// })
+// retrieve specific board
+// http://localhost:3000/boards/:boardId
+boardRoutes.route('/boards/:boardId').get(verifyToken, async (request,response) => {
+    let db = database.getDb();
+    let data = await db.collection(BOARD_COLLECTION_NAME).findOne({_id: new ObjectId(request.params.boardId)})
+    // since data should only be one object, we check if the object is empty or not
+    if(Object.keys(data).length > 0){
+        response.json(data);
+    } else{
+        throw new Error("Data not found")
+    }
+})
 
 // // create one
 // // route can be same but use different methods (get/post)

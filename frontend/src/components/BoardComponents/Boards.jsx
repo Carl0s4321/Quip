@@ -6,14 +6,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import useBoardStore from "../../store/BoardStore";
 import BoardPopup from './BoardPopup'
+import { Link } from "react-router-dom";
 
 
 
 function Board({board}){
     return(
+      <Link to={`/board/${board._id}`}>
         <div className="board">
           <p>{board.boardName}</p>
         </div>
+      </Link>
     )
 }
 
@@ -25,7 +28,7 @@ function Boards() {
   const {searchString} = useBoardStore();
 
   function handleCreateBoard(){
-    
+    // TODO
   }
 
   useEffect(() => {
@@ -49,7 +52,7 @@ function Boards() {
       <div className="w-full">
         <h2 className="my-5 text-xl">Your boards</h2>
         
-        <div className="grid gap-y-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+        <div className="grid gap-8 grid-flow-row-dense grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {searchString ? <></> :
             <div className="board" onClick={()=>{
               setPopupVisible(true);
@@ -63,7 +66,7 @@ function Boards() {
                 return null;
               }
               return(
-                <Board key={index} board={board}/>
+                <Board key={index} board={board} />
               )
           })
           ) : (
