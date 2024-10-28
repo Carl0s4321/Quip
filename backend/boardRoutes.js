@@ -38,12 +38,12 @@ boardRoutes.route('/boards/:boardId').get(verifyToken, async (request,response) 
         if (!board) {
             return response.status(404).json({ error: "Board not found" });
         }
-        // console.log('board response', board)
+        console.log('board response', board)
         
         
         // get columns related to each board
         const columns = await db.collection(COLUMN_COLLECTION_NAME).find({ boardId: board._id.toString() }).toArray();
-        console.log('column response', columns)
+        // console.log('column response', columns)
 
         const columnsObject = {};
 
@@ -67,8 +67,8 @@ boardRoutes.route('/boards/:boardId').get(verifyToken, async (request,response) 
         });
 
         const responseBody = {
-            _id: board._id,
-            name: board.name,
+            _id: board._id.toString(),
+            name: board.boardName,
             creatorId: board.creatorId,
             invitedUsers: board.invitedUsers || [],
             tasks: tasksObject,

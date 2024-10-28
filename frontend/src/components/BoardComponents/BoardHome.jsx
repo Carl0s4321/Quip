@@ -6,7 +6,7 @@ import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 
 function BoardHome() {
   const { boardId } = useParams();
-  const [boardInfo, setBoardInfo] = useState({});
+  // const [boardInfo, setBoardInfo] = useState({});
 
   //   const [initData, setInitData] = useState({
   //     tasks: {
@@ -37,23 +37,22 @@ function BoardHome() {
   //   });
 
   const [initData, setInitData] = useState({
-    tasks: {
-      
-    },
-    columns: {
-      
-    },
-
+    tasks: {},
+    columns: {},
     columnOrder: [],
   });
 
   useEffect(() => {
     const fetchBoard = async () => {
-      setBoardInfo([]);
+      setInitData({
+        tasks: {},
+        columns: {},
+        columnOrder: [],
+      });
       try {
         const response = await getBoard(boardId);
         console.log("response", response);
-        setBoardInfo(response);
+        // setBoardInfo(response);
         setInitData(response);
       } catch (error) {
         console.error("Error fetching boards:", error);
@@ -153,7 +152,7 @@ function BoardHome() {
 
   return (
     <>
-      <h1 className="text-2xl font-semibold">{boardInfo.name}</h1>
+      <h1 className="text-2xl font-semibold">{initData.name}</h1>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable
           droppableId="all-columns"
