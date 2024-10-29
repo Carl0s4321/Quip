@@ -83,40 +83,36 @@ boardRoutes.route('/boards/:boardId').get(verifyToken, async (request,response) 
     }
 })
 
-// // create one
-// // route can be same but use different methods (get/post)
-// boardRoutes.route('/users').post(async (request,response) => {
-//     let db = database.getDb();
+// create one
+// route can be same but use different methods (get/post)
+boardRoutes.route('/boards/create/:boardName').post(async (request,response) => {
+    let db = database.getDb();
 
-//     try {
-//         const takenEmail = await db.collection(BOARD_COLLECTION_NAME).findOne({ email: request.body.email });
-//         if (takenEmail) {
-//           return response.json({ success:false, message: "Email is taken" });
-//         }
-    
-//         const hash = await bcrypt.hash(request.body.password, SALT);
-    
-//         let mongoObject = {
-//           name: request.body.name,
-//           email: request.body.email,
-//           password: hash,
-//         };
-    
-//         let data = await db.collection(BOARD_COLLECTION_NAME).insertOne(mongoObject);
+    try {
+        const takenBoard = await db.collection(BOARD_COLLECTION_NAME).findOne({ boardName: request.params.boardName });
+        if (takenBoard) {
+          return response.json({ success:false, message: "Board name is taken" });
+        }
 
-//         // console.log("DATA IN ROUTES:, ", data)
-
-//         const token = jwt.sign(mongoObject, process.env.SECRET_KEY, { expiresIn: '24h' });
+        let mongoObject = {
+          creatorId: request.body._id,
+          boardName: request.params.boardName,
+          invitedUsers: [],
+          columnOrder: [],
+        };
     
-//         return response.json({
-//             success: true,
-//             message: 'User created successfully',
-//             token: token,
-//         });
-//       } catch (error) {
-//         throw error
-//       }
-// })
+        let data = await db.collection(BOARD_COLLECTION_NAME).insertOne(mongoObject);
+
+        // console.log('RETURNED DATA CREATE: ', data)
+
+        return response.json({
+            success: true,
+            message: 'Board created successfully',
+        });
+      } catch (error) {
+        throw error
+      }
+})
 
 // // update one
 // boardRoutes.route('/users/:id').put(verifyToken, async (request,response) => {
@@ -153,12 +149,22 @@ boardRoutes.route('/boards/:boardId').get(verifyToken, async (request,response) 
 //     }
 // })
 
-// // delete one
-// boardRoutes.route('/users/:id').delete(verifyToken, async (request,response) => {
-//     let db = database.getDb();
-//     let data = await db.collection(BOARD_COLLECTION_NAME).deleteOne({_id: new ObjectId(request.params.id)})
-//     response.json(data);
-// })
+// delete one
+boardRoutes.route('/boards/delete/:id').delete(verifyToken, async (request,response) => {
+    let db = database.getDb();
+    try{
+        let data = await db.collection(BOARD_COLLECTION_NAME).deleteOne({_id: new ObjectId(request.params.id)})
+
+        if (data.deletedCount === 0) {
+            return response.status(404).json({ error: "Board not found" });
+        }
+
+        response.json({ message: "Board deleted successfully", data });
+    } catch(error){
+        console.error(error);
+        response.status(500).json({ error: "An error occurred while deleting the board" });
+    }
+})
 
 // // login
 // boardRoutes.route('/users/login').post(async (request,response) => {

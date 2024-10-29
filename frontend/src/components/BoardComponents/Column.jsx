@@ -3,8 +3,8 @@ import { Droppable, Draggable } from "@hello-pangea/dnd";
 
 function Column({ column, tasks, index }) {
 
-console.log('column', column)
-console.log('tasks', tasks)
+// console.log('column', column)
+// console.log('tasks', tasks)
 
   return (
     <Draggable draggableId={column.id} key={column.id} index={index}>

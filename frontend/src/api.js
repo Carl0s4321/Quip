@@ -59,3 +59,23 @@ export async function getBoard(boardId) {
         return
     }
 }
+
+export async function createBoard(boardName, user) {
+    const response = await axios.post(`${URL}/boards/create/${boardName}`, user);
+
+    if(response.status === 200){
+        return response.data
+    }else{
+        return
+    }
+}
+
+export async function deleteBoard(boardId) {
+    const response = await axios.delete(`${URL}/boards/delete/${boardId}`);
+
+    if(response.status === 200){
+        return response.data
+    }else{
+        return
+    }
+}
