@@ -38,7 +38,7 @@ boardRoutes.route('/boards/:boardId').get(verifyToken, async (request,response) 
         if (!board) {
             return response.status(404).json({ error: "Board not found" });
         }
-        console.log('board response', board)
+        // console.log('board response', board)
         
         
         // get columns related to each board
@@ -112,6 +112,43 @@ boardRoutes.route('/boards/create/:boardName').post(async (request,response) => 
       } catch (error) {
         throw error
       }
+})
+
+
+// create new column
+boardRoutes.route('/boards/columns/create/:columnName').post(async (request,response) => {
+    let db = database.getDb();
+
+    const initData = request.body;
+
+    let newColumn = {
+      _id: new ObjectId(),
+      boardId: initData._id,
+      title: request.params.columnName,
+      taskIds: [],
+    }
+
+    try{
+        let data = await db.collection(BOARD_COLLECTION_NAME).updateOne({_id: new ObjectId(initData._id)}, {$addToSet: {columnOrder: newColumn._id.toString()}})
+        
+        if (data.modifiedCount > 0) {
+            let data = await db.collection(COLUMN_COLLECTION_NAME).insertOne(newColumn)
+            return response.json({
+                success: true,
+                message: 'Column created successfully',
+            });
+
+
+        } else {
+            return response.status(400).json({
+                message: 'Failed to add Column',
+            });
+        }
+
+    }catch(error){
+        throw error
+    }
+
 })
 
 // // update one

@@ -79,3 +79,12 @@ export async function deleteBoard(boardId) {
         return
     }
 }
+
+export async function createColumn(columnName, initData){
+    const response = await axios.post(`${URL}/boards/columns/create/${columnName}`, initData)
+    if(response.status === 200){
+        return response.data
+    }else{
+        return
+    }
+}

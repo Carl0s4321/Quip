@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getBoard } from "../../api";
+import { createColumn, getBoard } from "../../api";
 import Column from "./Column";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import BoardPopup from "./BoardPopup";
 
 function BoardHome() {
   const { boardId } = useParams();
-  // const [boardInfo, setBoardInfo] = useState({});
-
+  const [fetchTrigger, setFetchTrigger] = useState(false)
+  const [isPopupVisible, setPopupVisible] = useState(false);
+  
   //   const [initData, setInitData] = useState({
   //     tasks: {
   //       "task-1": { id: "task-1", content: "Take out garbage" },
@@ -60,7 +64,7 @@ function BoardHome() {
     };
 
     fetchBoard();
-  }, [boardId]);
+  }, [boardId, fetchTrigger]);
 
   function onDragEnd(result) {
     const { destination, source, draggableId, type } = result;
@@ -150,41 +154,86 @@ function BoardHome() {
     setInitData(newInitData);
   }
 
+  async function handleAddColumn(columnName){
+    // console.log(initData)
+    const response = await createColumn(columnName, initData)
+    if(response.success){
+      setFetchTrigger(!fetchTrigger)
+      console.log('nice')
+    }
+    setPopupVisible(!isPopupVisible)
+    // const newColumn = {
+    //   id: "column-4",
+    //   title: 'test',
+    //   taskIds: [],
+    // }
+
+    // const newColumnOrder = Array.from(initData.columnOrder);
+    // newColumnOrder.push(newColumn.id)
+    
+    // const newInitData = {
+    //   ...initData,
+    //   columns: {
+    //     ...initData.columns,
+    //     [newColumn.id]: newColumn,
+    //   },
+    //   columnOrder: newColumnOrder,
+    // };
+    
+    // setInitData(newInitData)
+  }
+
   return (
     <>
       <h1 className="text-2xl font-semibold">{initData.name}</h1>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable
-          droppableId="all-columns"
-          direction="horizontal"
-          type="column"
-        >
-          {(provided) => (
-            <div
-              className="flex flex-row"
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {initData.columnOrder.map((columnId, index) => {
-                const column = initData.columns[columnId];
-                const tasks = column.taskIds.map((taskId) => {
-                  return initData.tasks[taskId];
-                });
+      <div className="flex flex-row">
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable
+            droppableId="all-columns"
+            direction="horizontal"
+            type="column"
+          >
+            {(provided) => (
+              <div
+                className="flex flex-row grow"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {initData.columnOrder.map((columnId, index) => {
+                  const column = initData.columns[columnId];
+                  const tasks = column.taskIds.map((taskId) => {
+                    return initData.tasks[taskId];
+                  });
 
-                return (
-                  <Column
-                    key={column.columnId}
-                    column={column}
-                    tasks={tasks}
-                    index={index}
-                  />
-                );
-              })}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+                  return (
+                    <Column
+                      key={column.columnId}
+                      column={column}
+                      tasks={tasks}
+                      index={index}
+                    />
+                  );
+                })}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+
+        <div className="flex items-center">
+          <FontAwesomeIcon onClick={()=>setPopupVisible(!isPopupVisible)} icon={faPlus} className="p-5 rounded-lg hover:bg-gray-500 hover:cursor-pointer bg-gray-500/50 text-white text-3xl"/>
+        </div>
+
+      </div>
+
+      {/* POPUP FOR BOARD CREATION */}
+      {isPopupVisible && (
+        <BoardPopup
+          type="create"
+          onSubmit={handleAddColumn}
+          onClose={() => setPopupVisible(false)}
+        />
+      )}
     </>
   );
 }
