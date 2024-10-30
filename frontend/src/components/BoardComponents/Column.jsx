@@ -1,10 +1,14 @@
 import Task from "./Task";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
 function Column({ column, tasks, index }) {
 
-// console.log('column', column)
-// console.log('tasks', tasks)
+  function handleDeleteColumn(){
+    console.log(column)
+    console.log(tasks)
+  }
 
   return (
     <Draggable draggableId={column.id} key={column.id} index={index}>
@@ -14,9 +18,14 @@ function Column({ column, tasks, index }) {
           {...provided.draggableProps}
           ref={provided.innerRef}
         >
-          <h2 className="p-2" {...provided.dragHandleProps}>
-            {column.title}
-          </h2>
+          <div className="flex flex-row p-2">
+            <h2 {...provided.dragHandleProps} className="grow">
+              {column.title}
+            </h2>
+            <div className="cursor-pointer" onClick={handleDeleteColumn}>
+              <FontAwesomeIcon icon={faCircleXmark} className="rounded-full text-red-500 text-2xl"/>
+            </div>
+          </div>
           <Droppable droppableId={column.id} type="task">
             {(provided, snapshot) => (
               <div
