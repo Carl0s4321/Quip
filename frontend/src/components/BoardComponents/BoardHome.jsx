@@ -55,29 +55,12 @@ function BoardHome() {
     console.log("client connected");
     socket.emit("userConnected", { boardId });
 
-    socket.on("initialBoardData", (boardData) => {
+    socket.on("refreshBoardData", (boardData) => {
       // console.log(boardData)
       setInitData(boardData);
     });
 
-    // listen for real time updates
-    socket.on("columnCreated", (response) => {
-      if (response.success) {
-        console.log(response.message);
-      } else {
-        console.error(response.message);
-      }
-    });
-
-    socket.on('deleteColumnResponse', (response) => {
-      if (response.success) {
-        console.log(response.message);
-      } else {
-        console.error(response.message);
-      }
-    })
-
-    socket.on('updateColumnPosResponse', (response) => {
+    socket.on('response', (response) => {
       if (response.success) {
         console.log(response.message);
       } else {
@@ -85,19 +68,16 @@ function BoardHome() {
       }
     })    
 
-    socket.on("refreshBoardData", (boardData) => {
-      console.log(boardData)
-      setInitData(boardData);
-  });
-
 
     // Cleanup event listeners on component unmount
     return () => {
-      socket.off("initialBoardData");
-      socket.off("columnCreated");
-      socket.off("refreshBoardData");
-      socket.off("deleteColumnResponse");
-      socket.off("updateColumnPosResponse");
+
+      socket.removeAllListeners()
+      // socket.off("initialBoardData");
+      // socket.off("columnCreated");
+      // socket.off("refreshBoardData");
+      // socket.off("deleteColumnResponse");
+      // socket.off("updateColumnPosResponse");
       console.log("client disconnected");
       socket.disconnect();
     };
@@ -201,7 +181,7 @@ function BoardHome() {
   }
 
   async function handleCreateColumn(columnName) {
-    console.log(initData);
+    // console.log(initData);
     socket.emit("createColumn", {
       columnName: columnName,
       boardData: initData,
@@ -222,7 +202,7 @@ function BoardHome() {
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable
             droppableId="all-columns"
-            direction="horizontal"
+            direction="horizontal"  
             type="column"
           >
             {(provided) => (

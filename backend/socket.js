@@ -18,97 +18,76 @@ const initializeSocket = (server) => {
 
   io.on('connection', (socket) => {
     socket.on('userConnected', async ({ boardId }) => {
-      try {
         const boardData = await getBoard(boardId);
-        // console.log(boardData)
-        socket.emit('initialBoardData', boardData);
-      } catch (error) {
-        console.error("Error fetching board data:", error);
-      }
+        socket.emit('refreshBoardData', boardData);
     });
 
-
-    socket.on('createColumn', async ({columnName, boardData }) => {
-        try {
-            const result = await createColumn(columnName, boardData);
-    
-            if (result.success) {
-                // notify all clients to refresh the board data
-                const updatedBoardData = await getBoard(boardData._id);
-
-                io.emit('refreshBoardData', updatedBoardData);
-                socket.emit('columnCreated', {
-                    success: true,
-                    message: 'Column created successfully',
-                });
-            } else {
-                socket.emit('columnCreated', {
-                    success: false,
-                    message: result.message,
-                });
-            }
-        } catch (error) {
-            console.error("Error handling createColumn event:", error);
-            socket.emit('columnCreated', {
-                success: false,
-                message: 'Internal server error',
-            });
-        }
+    socket.on('createColumn', (data)=>{
+        handleSocketEvent('createColumn', socket, data)
     });
 
-    socket.on('deleteColumn', async({columnId, taskIds, boardId}) => {
-        try {
-            const result = await deleteColumn(columnId, taskIds);
-    
-            if (result.success) {
-                // notify all clients to refresh the board data
-                const updatedBoardData = await getBoard(boardId);
+    socket.on('deleteColumn', (data)=>{
+        handleSocketEvent('deleteColumn', socket, data)
+    });
 
-                io.emit('refreshBoardData', updatedBoardData);
-                socket.emit('deleteColumnResponse', {
-                    success: true,
-                    message: 'Column succesfully deleted',
-                });
-            } else {
-                socket.emit('deleteColumnResponse', {
-                    success: false,
-                    message: result.message,
-                });
+    socket.on('updateColumnPosition', (data)=>{
+        handleSocketEvent('updateColumnPosition', socket, data)
+    });
+
+    /**
+     * General event handler for sockets
+     * @param {string} eventType
+     * @param {socket} socket
+     * @param {*} data object of datas given in param
+     * @returns updated boardData object and the event response
+     */
+    async function handleSocketEvent(eventType, socket, data){
+        let result={};
+        let board_id="";
+        switch(eventType){
+            case 'createColumn':{
+                const {columnName, boardData} = data
+                board_id = boardData._id
+                result = await createColumn(columnName, boardData)
             }
-        } catch (error) {
-            console.error("Error handling deleteColumn event:", error);
-            socket.emit('deleteColumnResponse', {
+                break
+
+            case 'deleteColumn':{
+                const {columnId, taskIds, boardId} = data
+                board_id = boardId
+                result = await deleteColumn(columnId, taskIds);
+            }
+                break
+
+            case 'updateColumnPosition':{
+                const {boardId, columnOrder} = data
+                board_id = boardId
+                result = await updateColumnPosition(boardId, columnOrder)
+            }
+                break
+    
+            
+
+            // eventType doesnt match with known ones
+            default:
+                // HANDLE ERROR
+                break
+        }
+
+        if(result.success){
+            const updatedBoardData = await getBoard(board_id)
+            io.emit('refreshBoardData', updatedBoardData)
+            socket.emit(eventType, {
+                success: true,
+                message: `${eventType} is successful`,
+            })
+        }else{
+            socket.emit('response', {
                 success: false,
-                message: 'Internal server error',
+                message: `${eventType} failed!`,
             });
         }
-    })
-
-    socket.on('updateColumnPosition', async({boardId, columnOrder}) => {
-        try{
-            const result = await updateColumnPosition(boardId, columnOrder)
-            if(result.success){
-                // notify all clients to refresh the board data
-                const updatedBoardData = await getBoard(boardId);
-
-                io.emit('refreshBoardData', updatedBoardData);
-                socket.emit('updateColumnPosResponse', {
-                    success: true,
-                    message: 'Column succesfully updated',
-                });
-            } else {
-                socket.emit('updateColumnPosResponse', {
-                    success: false,
-                    message: 'Column update failed',
-                }); 
-            }
-
-        }catch(error){
-            console.error("Error handling updateColumnPosition event:", error);
-        }
-    })
-    
-  
+    }
   });
 };
 
@@ -163,7 +142,11 @@ async function deleteColumn(columnId, taskIds){
     }
 }
 
-
+/**
+ * Gets the board data formatted into a boardData object
+ * @param {*} boardId string
+ * @returns boardData object
+ */
 async function getBoard(boardId) {
     try {
       const db = database.getDb();
