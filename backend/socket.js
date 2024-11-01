@@ -57,9 +57,6 @@ const initializeSocket = (server) => {
     });
 
     socket.on('deleteColumn', async({columnId, taskIds, boardId}) => {
-        console.log('Column ID:', columnId);
-        console.log('Task IDs:', taskIds); // Should not be undefined
-        console.log('Board ID:', boardId);
         try {
             const result = await deleteColumn(columnId, taskIds);
     
@@ -79,11 +76,35 @@ const initializeSocket = (server) => {
                 });
             }
         } catch (error) {
-            console.error("Error handling createColumn event:", error);
+            console.error("Error handling deleteColumn event:", error);
             socket.emit('deleteColumnResponse', {
                 success: false,
                 message: 'Internal server error',
             });
+        }
+    })
+
+    socket.on('updateColumnPosition', async({boardId, columnOrder}) => {
+        try{
+            const result = await updateColumnPosition(boardId, columnOrder)
+            if(result.success){
+                // notify all clients to refresh the board data
+                const updatedBoardData = await getBoard(boardId);
+
+                io.emit('refreshBoardData', updatedBoardData);
+                socket.emit('updateColumnPosResponse', {
+                    success: true,
+                    message: 'Column succesfully updated',
+                });
+            } else {
+                socket.emit('updateColumnPosResponse', {
+                    success: false,
+                    message: 'Column update failed',
+                }); 
+            }
+
+        }catch(error){
+            console.error("Error handling updateColumnPosition event:", error);
         }
     })
     
@@ -98,9 +119,24 @@ const getIo = () => {
   return io;
 };
 
+async function updateColumnPosition(boardId, columnOrder) {
+    let db = database.getDb();
+
+    try{
+        await db.collection(BOARD_COLLECTION_NAME).updateOne(
+            {_id: new ObjectId(boardId)},
+            {$set : {columnOrder: columnOrder}}
+        )
+
+        return {success: true}
+    } catch(error){
+        throw error
+    }
+}
+
 async function deleteColumn(columnId, taskIds){
     let db = database.getDb();
-    console.log('taskIds', taskIds)
+    // console.log('taskIds', taskIds)
     const objectIds = taskIds.map(id => new ObjectId(id));
 
     try{

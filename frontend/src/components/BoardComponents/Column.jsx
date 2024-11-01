@@ -13,8 +13,8 @@ function Column({ column, tasks, index, boardId }) {
       taskIds: taskIds,
       boardId: boardId,
     });
-    console.log(column);
-    console.log(tasks);
+    // console.log(column);
+    // console.log(tasks);
   }
 
   return (

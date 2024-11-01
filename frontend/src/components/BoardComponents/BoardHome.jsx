@@ -77,6 +77,14 @@ function BoardHome() {
       }
     })
 
+    socket.on('updateColumnPosResponse', (response) => {
+      if (response.success) {
+        console.log(response.message);
+      } else {
+        console.error(response.message);
+      }
+    })    
+
     socket.on("refreshBoardData", (boardData) => {
       console.log(boardData)
       setInitData(boardData);
@@ -88,10 +96,20 @@ function BoardHome() {
       socket.off("initialBoardData");
       socket.off("columnCreated");
       socket.off("refreshBoardData");
+      socket.off("deleteColumnResponse");
+      socket.off("updateColumnPosResponse");
       console.log("client disconnected");
       socket.disconnect();
     };
   }, [boardId]);
+
+  function handleMoveColumn(newInitData){
+    // console.log(initData)
+    socket.emit('updateColumnPosition', {
+      boardId: newInitData._id,
+      columnOrder: newInitData.columnOrder,
+    })
+  }
 
   function onDragEnd(result) {
     const { destination, source, draggableId, type } = result;
@@ -123,6 +141,7 @@ function BoardHome() {
       };
 
       setInitData(newInitData);
+      handleMoveColumn(newInitData);
       return;
     }
 
