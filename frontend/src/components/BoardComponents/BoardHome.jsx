@@ -6,12 +6,16 @@ import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import BoardPopup from "./BoardPopup";
+import socket from "../../utils/socket";
 
 function BoardHome() {
   const { boardId } = useParams();
-  const [fetchTrigger, setFetchTrigger] = useState(false)
+  const [fetchTrigger, setFetchTrigger] = useState(false);
   const [isPopupVisible, setPopupVisible] = useState(false);
-  
+
+  const [columns, setColumns] = useState([]);
+  const [tasks, setTasks] = useState([]);
+
   //   const [initData, setInitData] = useState({
   //     tasks: {
   //       "task-1": { id: "task-1", content: "Take out garbage" },
@@ -47,24 +51,47 @@ function BoardHome() {
   });
 
   useEffect(() => {
-    const fetchBoard = async () => {
-      setInitData({
-        tasks: {},
-        columns: {},
-        columnOrder: [],
-      });
-      try {
-        const response = await getBoard(boardId);
-        console.log("response", response);
-        // setBoardInfo(response);
-        setInitData(response);
-      } catch (error) {
-        console.error("Error fetching boards:", error);
-      }
-    };
+    socket.connect();
+    console.log("client connected");
+    socket.emit("userConnected", { boardId });
 
-    fetchBoard();
-  }, [boardId, fetchTrigger]);
+    socket.on("initialBoardData", (boardData) => {
+      // console.log(boardData)
+      setInitData(boardData);
+    });
+
+    // listen for real time updates
+    socket.on("columnCreated", (response) => {
+      if (response.success) {
+        console.log(response.message);
+      } else {
+        console.error(response.message);
+      }
+    });
+
+    socket.on('deleteColumnResponse', (response) => {
+      if (response.success) {
+        console.log(response.message);
+      } else {
+        console.error(response.message);
+      }
+    })
+
+    socket.on("refreshBoardData", (boardData) => {
+      console.log(boardData)
+      setInitData(boardData);
+  });
+
+
+    // Cleanup event listeners on component unmount
+    return () => {
+      socket.off("initialBoardData");
+      socket.off("columnCreated");
+      socket.off("refreshBoardData");
+      console.log("client disconnected");
+      socket.disconnect();
+    };
+  }, [boardId]);
 
   function onDragEnd(result) {
     const { destination, source, draggableId, type } = result;
@@ -154,33 +181,19 @@ function BoardHome() {
     setInitData(newInitData);
   }
 
-  async function handleAddColumn(columnName){
+  async function handleCreateColumn(columnName) {
+    console.log(initData);
+    socket.emit("createColumn", {
+      columnName: columnName,
+      boardData: initData,
+    });
     // console.log(initData)
-    const response = await createColumn(columnName, initData)
-    if(response.success){
-      setFetchTrigger(!fetchTrigger)
-      console.log('nice')
-    }
-    setPopupVisible(!isPopupVisible)
-    // const newColumn = {
-    //   id: "column-4",
-    //   title: 'test',
-    //   taskIds: [],
+    // const response = await createColumn(columnName, initData);
+    // if (response.success) {
+    //   setFetchTrigger(!fetchTrigger);
+    //   console.log("nice");
     // }
-
-    // const newColumnOrder = Array.from(initData.columnOrder);
-    // newColumnOrder.push(newColumn.id)
-    
-    // const newInitData = {
-    //   ...initData,
-    //   columns: {
-    //     ...initData.columns,
-    //     [newColumn.id]: newColumn,
-    //   },
-    //   columnOrder: newColumnOrder,
-    // };
-    
-    // setInitData(newInitData)
+    setPopupVisible(!isPopupVisible);
   }
 
   return (
@@ -211,6 +224,7 @@ function BoardHome() {
                       column={column}
                       tasks={tasks}
                       index={index}
+                      boardId={boardId}
                     />
                   );
                 })}
@@ -221,16 +235,19 @@ function BoardHome() {
         </DragDropContext>
 
         <div className="flex items-center">
-          <FontAwesomeIcon onClick={()=>setPopupVisible(!isPopupVisible)} icon={faPlus} className="p-5 rounded-lg hover:bg-gray-500 hover:cursor-pointer bg-gray-500/50 text-white text-3xl"/>
+          <FontAwesomeIcon
+            onClick={() => setPopupVisible(!isPopupVisible)}
+            icon={faPlus}
+            className="p-5 rounded-lg hover:bg-gray-500 hover:cursor-pointer bg-gray-500/50 text-white text-3xl"
+          />
         </div>
-
       </div>
 
       {/* POPUP FOR BOARD CREATION */}
       {isPopupVisible && (
         <BoardPopup
           type="create"
-          onSubmit={handleAddColumn}
+          onSubmit={handleCreateColumn}
           onClose={() => setPopupVisible(false)}
         />
       )}

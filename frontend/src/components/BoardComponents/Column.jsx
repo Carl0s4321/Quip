@@ -2,12 +2,19 @@ import Task from "./Task";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import socket from "../../utils/socket";
+import { useEffect } from "react";
 
-function Column({ column, tasks, index }) {
-
-  function handleDeleteColumn(){
-    console.log(column)
-    console.log(tasks)
+function Column({ column, tasks, index, boardId }) {
+  function handleDeleteColumn() {
+    const taskIds = Object.values(tasks).map((task) => task.id);
+    socket.emit("deleteColumn", {
+      columnId: column.id,
+      taskIds: taskIds,
+      boardId: boardId,
+    });
+    console.log(column);
+    console.log(tasks);
   }
 
   return (
@@ -23,7 +30,10 @@ function Column({ column, tasks, index }) {
               {column.title}
             </h2>
             <div className="cursor-pointer" onClick={handleDeleteColumn}>
-              <FontAwesomeIcon icon={faCircleXmark} className="rounded-full text-red-500 text-2xl"/>
+              <FontAwesomeIcon
+                icon={faCircleXmark}
+                className="rounded-full text-red-500 text-2xl"
+              />
             </div>
           </div>
           <Droppable droppableId={column.id} type="task">
