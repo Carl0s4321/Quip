@@ -1,7 +1,7 @@
 import Task from "./Task";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { faCircleXmark, faPlus } from "@fortawesome/free-solid-svg-icons";
 import socket from "../../utils/socket";
 import { useEffect } from "react";
 
@@ -17,7 +17,16 @@ function Column({ column, tasks, index, boardId }) {
     // console.log(tasks);
   }
 
+  function handleCreateTask() {
+    socket.emit("createTask", {
+      content: 'testask',
+      columnId: column.id,
+      boardId: boardId,
+    });
+  }
+
   return (
+    <>
     <Draggable draggableId={column.id} key={column.id} index={index}>
       {(provided) => (
         <div
@@ -38,23 +47,40 @@ function Column({ column, tasks, index, boardId }) {
           </div>
           <Droppable droppableId={column.id} type="task">
             {(provided, snapshot) => (
-              <div
-                className={`${
-                  snapshot.isDraggingOver ? "bg-green-400" : ""
-                } p-2 transition-colors duration-200 ease-in-out flex-grow min-h-28`}
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-              >
-                {tasks.map((task, index) => {
-                  return <Task key={task.id} task={task} index={index} />;
-                })}
-                {provided.placeholder}
+              <div className="flex flex-col h-full">
+                <div
+                  className={`${
+                    snapshot.isDraggingOver ? "bg-green-400" : ""
+                  } p-2 transition-colors duration-200 ease-in-out flex-grow min-h-28`}
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  {tasks.map((task, index) => {
+                    return <Task key={task.id} task={task} index={index} />;
+                  })}
+                  {provided.placeholder}
+                </div>
+                <div className="p-2">
+                  <button onClick={handleCreateTask}>
+                    <span className="pr-2">
+                      <FontAwesomeIcon icon={faPlus}/>
+                    </span>
+                    Add task
+                  </button>
+                </div>
               </div>
             )}
           </Droppable>
         </div>
       )}
     </Draggable>
+
+
+                   
+    
+    </>
+    
+    
   );
 }
 
