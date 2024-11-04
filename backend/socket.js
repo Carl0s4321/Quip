@@ -42,6 +42,10 @@ const initializeSocket = (server) => {
         handleSocketEvent('updateTaskPosition', socket, data)
     });
 
+    socket.on('editTask', (data)=>{
+        handleSocketEvent('editTask', socket, data)
+    })
+
     /**
      * General event handler for sockets
      * @param {string} eventType
@@ -86,8 +90,18 @@ const initializeSocket = (server) => {
                 // console.log(data)
                 board_id = boardId
                 result = await updateTaskPosition(columns, start, finish, movedTaskId)
+                
             }
-    
+                break
+            
+            case 'editTask': {
+                const {boardId, taskId, content} = data
+                // console.log(data)
+                board_id = boardId
+                result = await editTask(taskId, content)
+                
+            }
+                break
             
 
             // eventType doesnt match with known ones
@@ -120,6 +134,24 @@ const getIo = () => {
   }
   return io;
 };
+
+async function editTask(taskId, content){
+    let db = database.getDb();
+
+    try{
+        let data = await db.collection(TASK_COLLECTION_NAME).updateOne(
+            {_id: new ObjectId(taskId)},
+            {$set: {content: content}}
+        )
+        if(data.modifiedCount > 0){
+            return { success: true};
+        }else{
+            return { success: false};
+        }
+    }catch(error){
+        throw error
+    }
+}
 
 async function createTask(content, columnId, boardId){
     let db = database.getDb();
@@ -277,7 +309,7 @@ async function updateTaskPosition(columns, start, finish, movedTaskId) {
             // update task's columnId to the new one
             await db.collection(TASK_COLLECTION_NAME).updateOne(
                 {_id: new ObjectId(movedTaskId)},
-                {$set: {columnId: movedTaskId}}
+                {$set: {columnId: finish.id}}
             )
         }
         return{success:true}

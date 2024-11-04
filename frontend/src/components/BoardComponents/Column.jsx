@@ -56,7 +56,7 @@ function Column({ column, tasks, index, boardId }) {
                   ref={provided.innerRef}
                 >
                   {tasks.map((task, index) => {
-                    return <Task key={task.id} task={task} index={index} />;
+                    return <Task boardId={boardId} key={task.id} task={task} index={index} />;
                   })}
                   {provided.placeholder}
                 </div>
