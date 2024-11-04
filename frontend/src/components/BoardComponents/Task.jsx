@@ -12,7 +12,7 @@ function Task({ task, index, boardId}) {
     e.preventDefault()
     console.log('submit', title)
     socket.emit("editTask", {
-      content: title,
+      content: {new:title, old: task.content},
       taskId: task.id,
       boardId: boardId,
     });
@@ -37,8 +37,8 @@ function Task({ task, index, boardId}) {
                 }} className={`${readOnly? "cursor-pointer" : "cursor-text"} border-none outline-none bg-transparent`} />    
               {!readOnly? 
                 <div className="flex flex-row gap-5">
-                  <FontAwesomeIcon icon={faCheck}/>
-                  <FontAwesomeIcon icon={faX}/>
+                  <FontAwesomeIcon icon={faCheck} onClick={handleTaskEdit} className="cursor-pointer bg-green-500 p-2"/>
+                  <FontAwesomeIcon icon={faX} onClick={()=>setReadOnly(!readOnly)} className="cursor-pointer bg-red-500 p-2"/>
                 </div>
                 :
                 <></>

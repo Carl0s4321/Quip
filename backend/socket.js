@@ -138,6 +138,11 @@ const getIo = () => {
 async function editTask(taskId, content){
     let db = database.getDb();
 
+    if(content.old === content.new){
+        console.log('same shit')
+        return {success:false};
+    }
+
     try{
         let data = await db.collection(TASK_COLLECTION_NAME).updateOne(
             {_id: new ObjectId(taskId)},
