@@ -3,9 +3,8 @@ import { Droppable, Draggable } from "@hello-pangea/dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark, faPlus } from "@fortawesome/free-solid-svg-icons";
 import socket from "../../utils/socket";
-import { useEffect } from "react";
 
-function Column({ column, tasks, index, boardId }) {
+function Column({ column, tasks, index, boardId, setType, setIsCreate, togglePopup, setSelectedColumn}) {
   function handleDeleteColumn() {
     const taskIds = Object.values(tasks).map((task) => task.id);
     socket.emit("deleteColumn", {
@@ -13,17 +12,16 @@ function Column({ column, tasks, index, boardId }) {
       taskIds: taskIds,
       boardId: boardId,
     });
-    // console.log(column);
-    // console.log(tasks);
+
   }
 
-  function handleCreateTask() {
-    socket.emit("createTask", {
-      content: 'testask',
-      columnId: column.id,
-      boardId: boardId,
-    });
-  }
+  // function handleCreateTask() {
+  //   socket.emit("createTask", {
+  //     content: 'testask',
+  //     columnId: column.id,
+  //     boardId: boardId,
+  //   });
+  // }
 
   return (
     <>
@@ -61,7 +59,12 @@ function Column({ column, tasks, index, boardId }) {
                   {provided.placeholder}
                 </div>
                 <div className="p-2">
-                  <button onClick={handleCreateTask}>
+                  <button onClick={()=>{
+                    setType("Task")
+                    setIsCreate(true)
+                    togglePopup()
+                    setSelectedColumn(column)
+                  }}>
                     <span className="pr-2">
                       <FontAwesomeIcon icon={faPlus}/>
                     </span>

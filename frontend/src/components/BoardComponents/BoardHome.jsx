@@ -5,12 +5,16 @@ import Column from "./Column";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import BoardPopup from "./BoardPopup";
+import BoardPopup from "./Popup/BoardPopup";
 import socket from "../../utils/socket";
+import Popup from "./Popup/Popup";
 
 function BoardHome() {
   const { boardId } = useParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
+  const [type, setType] = useState("");
+  const [isCreate, setIsCreate] = useState(true);
+  const [selectedColumn, setSelectedColumn] = useState();
 
   //   const [initData, setInitData] = useState({
   //     tasks: {
@@ -46,6 +50,22 @@ function BoardHome() {
     columnOrder: [],
   });
 
+  function togglePopup() {
+    setPopupVisible(!isPopupVisible);
+  }
+
+  function getSubmitFunction() {
+    switch (type) {
+      case "Column":
+        return handleCreateColumn;
+      case "Task":
+        return handleCreateTask;
+    }
+  }
+
+  // for getting reference to dynamic functions to popup
+  const submit = getSubmitFunction();
+
   useEffect(() => {
     socket.connect();
     console.log("client connected");
@@ -55,19 +75,17 @@ function BoardHome() {
       setInitData(boardData);
     });
 
-    socket.on('response', (response) => {
+    socket.on("response", (response) => {
       if (response.success) {
         console.log(response.message);
       } else {
         console.error(response.message);
       }
-    })    
-
+    });
 
     // Cleanup event listeners on component unmount
     return () => {
-
-      socket.removeAllListeners()
+      socket.removeAllListeners();
       // socket.off("initialBoardData");
       // socket.off("columnCreated");
       // socket.off("refreshBoardData");
@@ -77,28 +95,36 @@ function BoardHome() {
       console.log("client disconnected");
     };
   }, [boardId]);
-  
-/**
- * Handles the task move
- * @param {object} newInitData updated board data
- * @param {boolean} sameColumn true : task was moved in same column, else false
- */
-  function handleMoveTask(newInitData, start, finish, movedTaskId){
-    socket.emit('updateTaskPosition',{
+
+  function handleCreateTask(content) {
+    socket.emit("createTask", {
+      content: content,
+      columnId: selectedColumn.id,
+      boardId: boardId,
+    });
+  }
+
+  /**
+   * Handles the task move
+   * @param {object} newInitData updated board data
+   * @param {boolean} sameColumn true : task was moved in same column, else false
+   */
+  function handleMoveTask(newInitData, start, finish, movedTaskId) {
+    socket.emit("updateTaskPosition", {
       boardId: newInitData._id,
       columns: newInitData.columns,
       start: start,
       finish: finish,
       movedTaskId: movedTaskId,
-    })
+    });
   }
 
-  function handleMoveColumn(newInitData){
-    console.log(newInitData)
-    socket.emit('updateColumnPosition', {
+  function handleMoveColumn(newInitData) {
+    console.log(newInitData);
+    socket.emit("updateColumnPosition", {
       boardId: newInitData._id,
       columnOrder: newInitData.columnOrder,
-    })
+    });
   }
 
   function onDragEnd(result) {
@@ -142,7 +168,6 @@ function BoardHome() {
 
     // dropped in same column
     if (start === finish) {
-
       const newTaskIds = Array.from(start.taskIds);
       // remove 1 item at source.index from newTaskIds
       newTaskIds.splice(source.index, 1);
@@ -196,18 +221,11 @@ function BoardHome() {
   }
 
   async function handleCreateColumn(columnName) {
-    // console.log(initData);
     socket.emit("createColumn", {
       columnName: columnName,
       boardData: initData,
     });
-    // console.log(initData)
-    // const response = await createColumn(columnName, initData);
-    // if (response.success) {
-    //   setFetchTrigger(!fetchTrigger);
-    //   console.log("nice");
-    // }
-    setPopupVisible(!isPopupVisible);
+    togglePopup();
   }
 
   return (
@@ -217,7 +235,7 @@ function BoardHome() {
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable
             droppableId="all-columns"
-            direction="horizontal"  
+            direction="horizontal"
             type="column"
           >
             {(provided) => (
@@ -234,11 +252,15 @@ function BoardHome() {
 
                   return (
                     <Column
+                    setSelectedColumn={setSelectedColumn}
+                      setType={setType}
+                      setIsCreate={setIsCreate}
+                      togglePopup={togglePopup}
+                      boardId={boardId}
                       key={column.columnId}
                       column={column}
                       tasks={tasks}
                       index={index}
-                      boardId={boardId}
                     />
                   );
                 })}
@@ -250,21 +272,34 @@ function BoardHome() {
 
         <div className="flex items-center">
           <FontAwesomeIcon
-            onClick={() => setPopupVisible(!isPopupVisible)}
+            onClick={() => {
+              setType("Column");
+              setIsCreate(true);
+              togglePopup();
+            }}
             icon={faPlus}
             className="p-5 rounded-lg hover:bg-gray-500 hover:cursor-pointer bg-gray-500/50 text-white text-3xl"
           />
         </div>
       </div>
 
-      {/* POPUP FOR BOARD CREATION */}
       {isPopupVisible && (
+        <Popup
+          type={type}
+          isCreate={isCreate}
+          togglePopup={togglePopup}
+          handleSubmit={submit}
+        />
+      )}
+
+      {/* POPUP FOR BOARD CREATION */}
+      {/* {isPopupVisible && (
         <BoardPopup
           type="create"
           onSubmit={handleCreateColumn}
           onClose={() => setPopupVisible(false)}
         />
-      )}
+      )} */}
     </>
   );
 }

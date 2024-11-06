@@ -5,7 +5,7 @@ import "./board.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import useBoardStore from "../../store/BoardStore";
-import BoardPopup from "./BoardPopup";
+import BoardPopup from "./Popup/BoardPopup";
 import { Link } from "react-router-dom";
 import { createBoard, deleteBoard } from "../../api";
 
