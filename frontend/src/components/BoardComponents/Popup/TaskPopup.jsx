@@ -1,17 +1,17 @@
 import { useState } from "react";
 
-function TaskPopup({ isCreate, togglePopup, handleSubmit }) {
+function TaskPopup({ action, togglePopup, createFunc }) {
   const [content, setContent] = useState("");
 
   function handleCreate(e) {
     e.preventDefault();
-    handleSubmit(content);
+    createFunc(content);
     togglePopup();
   }
 
-  return (
-    <>
-      {isCreate ? (
+  switch(action) {
+    case 'create':
+      return (
         <form onSubmit={handleCreate}>
           <p className="text-gray-600 mb-1">Enter Task Name</p>
           <input
@@ -31,23 +31,25 @@ function TaskPopup({ isCreate, togglePopup, handleSubmit }) {
             </button>
           </div>
         </form>
-      ) : (
+        );
+    case 'edit':
+      return (
         <>
-          <p className="text-lg mb-2">
-            Are you sure you want to{" "}
-            <span className="font-semibold">delete</span> this Task?
-          </p>
-          <div className="flex w-full justify-evenly">
-            <button
-              className="p-2 bg-green-500 text-white rounded-md px-6 hover:bg-green-600"
-            >
-              Yes
-            </button>
-          </div>
+          {/* <form onSubmit={handleEdit}>
+            <p>Title</p>
+            <input onChange={(e)=>setTitle(e.target.value)} className="bg-red-200 w-full" value={title}/>
+
+            <div className="flex flex-row w-full justify-end gap-5">
+              <button type="submit">Save</button>
+              <button onClick={(e)=>{
+                e.preventDefault()
+                deleteFunc()}}>Delete</button>
+            </div>
+          </form> */}
         </>
-      )}
-    </>
-  );
-}
+      );
+    default:
+      return <div>No valid action</div>;
+  }}
 
 export default TaskPopup;

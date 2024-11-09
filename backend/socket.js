@@ -26,6 +26,10 @@ const initializeSocket = (server) => {
         handleSocketEvent('createColumn', socket, data)
     });
 
+    socket.on('editColumn', (data)=>{
+        handleSocketEvent('editColumn', socket, data)
+    });
+
     socket.on('deleteColumn', (data)=>{
         handleSocketEvent('deleteColumn', socket, data)
     });
@@ -61,6 +65,13 @@ const initializeSocket = (server) => {
                 const {columnName, boardData} = data
                 board_id = boardData._id
                 result = await createColumn(columnName, boardData)
+            }
+                break
+
+            case 'editColumn':{
+                const {columnId, title, boardId} = data
+                board_id = boardId
+                result = await editColumn(columnId, title)
             }
                 break
 
@@ -146,7 +157,7 @@ async function editTask(taskId, content){
     try{
         let data = await db.collection(TASK_COLLECTION_NAME).updateOne(
             {_id: new ObjectId(taskId)},
-            {$set: {content: content}}
+            {$set: {content: content.new}}
         )
         if(data.modifiedCount > 0){
             return { success: true};
@@ -236,8 +247,26 @@ async function createColumn(columnName, boardData){
         console.error("Error creating column:", error);
         throw error; 
     }
+}
 
-
+async function editColumn(columnId, title){
+    let db = database.getDb()
+    if(title.old === title.new){
+        return {success:false}
+    }
+    try{
+        let data = await db.collection(COLUMN_COLLECTION_NAME).updateOne(
+            {_id: new ObjectId(columnId)},
+            {$set: {title: title.new}}
+        )
+        if(data.modifiedCount > 0){
+            return { success: true};
+        }else{
+            return { success: false};
+        }
+    }catch(error){
+        throw error
+    }
 }
 
 async function deleteColumn(columnId, taskIds){

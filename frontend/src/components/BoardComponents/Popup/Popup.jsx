@@ -3,16 +3,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import ColumnPopup from "./ColumnPopup";
 import TaskPopup from "./TaskPopup"
-
-const Popup = ({ type, isCreate, togglePopup, handleSubmit }) => {
+/**
+ * General handler to show Popup
+ * @param {string} type "Board", "Column", "Task"
+ * @param {string} action "create", "delete", "edit"
+ * @returns 
+ */
+const Popup = ({ type, action, togglePopup, createFunc, editFunc, deleteFunc, data }) => {
   function renderContent() {
     switch (type) {
       case "Board":
         return <p className="text-gray-600 mb-4">board</p>;
       case "Column":
-        return <ColumnPopup isCreate={isCreate} togglePopup={togglePopup} handleSubmit={handleSubmit}/>;
+        return <ColumnPopup action={action} togglePopup={togglePopup} createFunc={createFunc} editFunc={editFunc} deleteFunc={deleteFunc} data={data}/>;
       case "Task":
-        return <TaskPopup isCreate={isCreate} togglePopup={togglePopup} handleSubmit={handleSubmit}/>;
+        return <TaskPopup action={action} togglePopup={togglePopup} createFunc={createFunc}/>;
       default:
         return <p className="text-gray-600 mb-4">Invalid type specified.</p>;
     }
@@ -28,16 +33,9 @@ const Popup = ({ type, isCreate, togglePopup, handleSubmit }) => {
           >
             <FontAwesomeIcon icon={faX} />
           </button>
-          <h2 className="text-lg font-semibold mb-4">Create a {type}</h2>
+          <h2 className="text-lg font-semibold mb-4">{type}</h2>
 
           {renderContent()}
-
-          {/* <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
-        >
-            Close Modal
-        </button> */}
         </div>
       </div>
     </div>

@@ -13,8 +13,7 @@ function BoardHome() {
   const { boardId } = useParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [type, setType] = useState("");
-  const [isCreate, setIsCreate] = useState(true);
-  const [selectedColumn, setSelectedColumn] = useState();
+  const [action, setAction] = useState('');
 
   //   const [initData, setInitData] = useState({
   //     tasks: {
@@ -54,18 +53,6 @@ function BoardHome() {
     setPopupVisible(!isPopupVisible);
   }
 
-  function getSubmitFunction() {
-    switch (type) {
-      case "Column":
-        return handleCreateColumn;
-      case "Task":
-        return handleCreateTask;
-    }
-  }
-
-  // for getting reference to dynamic functions to popup
-  const submit = getSubmitFunction();
-
   useEffect(() => {
     socket.connect();
     console.log("client connected");
@@ -86,23 +73,10 @@ function BoardHome() {
     // Cleanup event listeners on component unmount
     return () => {
       socket.removeAllListeners();
-      // socket.off("initialBoardData");
-      // socket.off("columnCreated");
-      // socket.off("refreshBoardData");
-      // socket.off("deleteColumnResponse");
-      // socket.off("updateColumnPosResponse");
       socket.disconnect();
       console.log("client disconnected");
     };
   }, [boardId]);
-
-  function handleCreateTask(content) {
-    socket.emit("createTask", {
-      content: content,
-      columnId: selectedColumn.id,
-      boardId: boardId,
-    });
-  }
 
   /**
    * Handles the task move
@@ -120,11 +94,19 @@ function BoardHome() {
   }
 
   function handleMoveColumn(newInitData) {
-    console.log(newInitData);
+    // console.log(newInitData);
     socket.emit("updateColumnPosition", {
       boardId: newInitData._id,
       columnOrder: newInitData.columnOrder,
     });
+  }
+
+  async function createColumn(columnName) {
+    socket.emit("createColumn", {
+      columnName: columnName,
+      boardData: initData,
+    });
+    togglePopup();
   }
 
   function onDragEnd(result) {
@@ -220,14 +202,6 @@ function BoardHome() {
     handleMoveTask(newInitData, start, finish, draggableId);
   }
 
-  async function handleCreateColumn(columnName) {
-    socket.emit("createColumn", {
-      columnName: columnName,
-      boardData: initData,
-    });
-    togglePopup();
-  }
-
   return (
     <>
       <h1 className="text-2xl font-semibold">{initData.name}</h1>
@@ -252,9 +226,8 @@ function BoardHome() {
 
                   return (
                     <Column
-                    setSelectedColumn={setSelectedColumn}
                       setType={setType}
-                      setIsCreate={setIsCreate}
+                      setAction={setAction}
                       togglePopup={togglePopup}
                       boardId={boardId}
                       key={column.columnId}
@@ -274,7 +247,7 @@ function BoardHome() {
           <FontAwesomeIcon
             onClick={() => {
               setType("Column");
-              setIsCreate(true);
+              setAction('create');
               togglePopup();
             }}
             icon={faPlus}
@@ -286,20 +259,12 @@ function BoardHome() {
       {isPopupVisible && (
         <Popup
           type={type}
-          isCreate={isCreate}
+          action={action}
           togglePopup={togglePopup}
-          handleSubmit={submit}
+          createFunc={createColumn}
         />
       )}
 
-      {/* POPUP FOR BOARD CREATION */}
-      {/* {isPopupVisible && (
-        <BoardPopup
-          type="create"
-          onSubmit={handleCreateColumn}
-          onClose={() => setPopupVisible(false)}
-        />
-      )} */}
     </>
   );
 }
