@@ -1,10 +1,10 @@
 import Task from "./Task";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark, faPencil, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPencil, faPlus } from "@fortawesome/free-solid-svg-icons";
 import socket from "../../utils/socket";
 import Popup from "./Popup/Popup";
-import { act, useEffect, useState } from "react";
+import { useState } from "react";
 
 function Column({ column, tasks, index, boardId}) {
   const [isPopupVisible, setPopupVisible] = useState(false)
@@ -105,7 +105,7 @@ function Column({ column, tasks, index, boardId}) {
                   ref={provided.innerRef}
                 >
                   {tasks.map((task, index) => {
-                    return <Task boardId={boardId} key={task.id} task={task} index={index} />;
+                    return <Task boardId={boardId} key={task.id} columnId={column.id} task={task} index={index} />;
                   })}
                   {provided.placeholder}
                 </div>

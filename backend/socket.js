@@ -50,6 +50,10 @@ const initializeSocket = (server) => {
         handleSocketEvent('editTask', socket, data)
     })
 
+    socket.on('deleteTask', (data)=>{
+        handleSocketEvent('deleteTask', socket, data)
+    })
+
     /**
      * General event handler for sockets
      * @param {string} eventType
@@ -114,6 +118,14 @@ const initializeSocket = (server) => {
             }
                 break
             
+            case 'deleteTask': {
+                const {boardId, taskId, columnId} = data
+                // console.log(data)
+                board_id = boardId
+                result = await deleteTask(taskId, columnId)
+                
+            }
+                break
 
             // eventType doesnt match with known ones
             default:
@@ -199,8 +211,26 @@ async function createTask(content, columnId, boardId){
 
 }
 
-async function deleteTask(){
+async function deleteTask(taskId, columnId){
+    let db=database.getDb();
 
+    try{
+        await db.collection(COLUMN_COLLECTION_NAME).updateOne(
+            { _id: new ObjectId(columnId)},
+            {$pull: {taskIds: taskId}}
+        );
+
+        const result = await db.collection(TASK_COLLECTION_NAME).deleteOne({ _id: new ObjectId(taskId)});
+
+        if (result.deletedCount > 0) {
+            return { success: true};
+        } else {
+            return { success: false};
+        }
+        
+    }catch(error){
+        throw error
+    }
 }
 
 

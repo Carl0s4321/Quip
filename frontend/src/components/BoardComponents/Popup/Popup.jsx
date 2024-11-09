@@ -17,7 +17,7 @@ const Popup = ({ type, action, togglePopup, createFunc, editFunc, deleteFunc, da
       case "Column":
         return <ColumnPopup action={action} togglePopup={togglePopup} createFunc={createFunc} editFunc={editFunc} deleteFunc={deleteFunc} data={data}/>;
       case "Task":
-        return <TaskPopup action={action} togglePopup={togglePopup} createFunc={createFunc}/>;
+        return <TaskPopup action={action} togglePopup={togglePopup} createFunc={createFunc} editFunc={editFunc} deleteFunc={deleteFunc} data={data}/>;
       default:
         return <p className="text-gray-600 mb-4">Invalid type specified.</p>;
     }

@@ -1,13 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-function TaskPopup({ action, togglePopup, createFunc }) {
-  const [content, setContent] = useState("");
+function TaskPopup({ action, togglePopup, createFunc, deleteFunc, editFunc, data }) {
+  const [content, setContent] = useState(data?.content || "");
 
   function handleCreate(e) {
     e.preventDefault();
     createFunc(content);
     togglePopup();
   }
+
+  function handleEdit(e){
+    e.preventDefault()
+    editFunc(content)
+    togglePopup()
+  }
+
 
   switch(action) {
     case 'create':
@@ -35,9 +42,13 @@ function TaskPopup({ action, togglePopup, createFunc }) {
     case 'edit':
       return (
         <>
-          {/* <form onSubmit={handleEdit}>
-            <p>Title</p>
-            <input onChange={(e)=>setTitle(e.target.value)} className="bg-red-200 w-full" value={title}/>
+          <form onSubmit={handleEdit}>
+            <p>Content</p>
+            <input onChange={(e)=>setContent(e.target.value)} className="bg-red-200 w-full" value={content}/>
+            <p>Sub Content</p>
+            {/* <input className="bg-red-200 w-full"/> */}
+            <p>Due Date</p>
+            <p>Image</p>
 
             <div className="flex flex-row w-full justify-end gap-5">
               <button type="submit">Save</button>
@@ -45,7 +56,7 @@ function TaskPopup({ action, togglePopup, createFunc }) {
                 e.preventDefault()
                 deleteFunc()}}>Delete</button>
             </div>
-          </form> */}
+          </form>
         </>
       );
     default:
