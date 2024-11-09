@@ -1,27 +1,70 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
-import ColumnPopup from "./ColumnPopup";
-import TaskPopup from "./TaskPopup"
+
 /**
  * General handler to show Popup
  * @param {string} type "Board", "Column", "Task"
- * @param {string} action "create", "delete", "edit"
+ * @param {string} action "create", "edit"
  * @returns 
  */
 const Popup = ({ type, action, togglePopup, createFunc, editFunc, deleteFunc, data }) => {
-  function renderContent() {
-    switch (type) {
-      case "Board":
-        return <p className="text-gray-600 mb-4">board</p>;
-      case "Column":
-        return <ColumnPopup action={action} togglePopup={togglePopup} createFunc={createFunc} editFunc={editFunc} deleteFunc={deleteFunc} data={data}/>;
-      case "Task":
-        return <TaskPopup action={action} togglePopup={togglePopup} createFunc={createFunc} editFunc={editFunc} deleteFunc={deleteFunc} data={data}/>;
-      default:
-        return <p className="text-gray-600 mb-4">Invalid type specified.</p>;
+  const [formData, setFormData] = useState({
+    title: "",
+    dueDate: "",
+    image: ""
+  });
+  
+  useEffect(() => {
+    console.log(data, 'data')
+    if (action === "edit" && data) {
+      setFormData({
+        title: data.title || "",
+        dueDate: data.dueDate || "",
+        image: data.image || ""
+      });
     }
+  }, [action, data]);
+
+  function handleInputChange(e) {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    console.log('input change', formData)
   }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (action === "create") {
+      createFunc(formData.title);
+    } else if (action === "edit") {
+      editFunc(formData.title);
+    }
+    togglePopup();
+  }
+
+  function handleDelete(e) {
+    e.preventDefault();
+    deleteFunc();
+    togglePopup();
+  }
+
+  // dynamic field config based on type and action
+  const fieldsConfig = {
+    Column: {
+      createFields: [{ label: "Column Name", name: "title", placeholder: "Enter Column Name" }],
+      editFields: [{ label: "Column Name", name: "title", placeholder: "Column Name" }]
+    },
+    Task: {
+      createFields: [{ label: "Task Name", name: "title", placeholder: "Enter Task Name" }],
+      editFields: [
+        { label: "Task Name", name: "title", placeholder: "Task Name" },
+        { label: "Due Date", name: "dueDate", placeholder: "Due Date" },
+        { label: "Image URL", name: "image", placeholder: "Image URL" }
+      ]
+    }
+  };
+
+  const fieldsToRender = action === "create" ? fieldsConfig[type].createFields : fieldsConfig[type].editFields;
 
   return (
     <div className="flex items-center justify-center min-h-screen">
@@ -33,9 +76,35 @@ const Popup = ({ type, action, togglePopup, createFunc, editFunc, deleteFunc, da
           >
             <FontAwesomeIcon icon={faX} />
           </button>
-          <h2 className="text-lg font-semibold mb-4">{type}</h2>
+          <h2 className="text-lg font-semibold mb-4">{`${action === "create" ? "Create" : "Edit"} ${type}`}</h2>
 
-          {renderContent()}
+          <form onSubmit={handleSubmit}>
+            {fieldsToRender.map((field, index) => (
+              <div key={index} className="mb-4">
+                <label className="text-gray-600">{field.label}</label>
+                <input
+                  type="text"
+                  name={field.name}
+                  value={formData[field.name] || ""}
+                  onChange={handleInputChange}
+                  className="border border-gray-300 rounded p-2 w-full"
+                  placeholder={field.placeholder}
+                  required={action === "create" && field.name === "name"}
+                />
+              </div>
+            ))}
+
+            <div className="flex flex-row w-full justify-end gap-5">
+              <button type="submit" className="bg-blue-500 text-white rounded px-4 py-2">
+                {action === "create" ? "Create" : "Save"}
+              </button>
+              {action === "edit" && (
+                <button onClick={handleDelete} className="text-red-500">
+                  Delete
+                </button>
+              )}
+            </div>
+          </form>
         </div>
       </div>
     </div>

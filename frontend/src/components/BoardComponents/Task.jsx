@@ -77,7 +77,7 @@ function Task({ task, index, columnId, boardId}) {
         togglePopup={togglePopup}
         editFunc={editTask}
         deleteFunc={deleteTask}
-        data={{content:task.content}}
+        data={{title:task.content}}
         />
     )}
     </>
