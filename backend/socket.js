@@ -63,65 +63,54 @@ const initializeSocket = (server) => {
      */
     async function handleSocketEvent(eventType, socket, data){
         let result={};
-        let board_id="";
+        let board_id=data.boardId;
         switch(eventType){
             case 'createColumn':{
-                const {columnName, boardData} = data
-                board_id = boardData._id
-                result = await createColumn(columnName, boardData)
+                const {columnName, boardId} = data
+                result = await createColumn(columnName, boardId)
             }
                 break
 
             case 'editColumn':{
-                const {columnId, title, boardId} = data
-                board_id = boardId
+                const {columnId, title} = data
                 result = await editColumn(columnId, title)
             }
                 break
 
             case 'deleteColumn':{
-                const {columnId, taskIds, boardId} = data
-                board_id = boardId
+                const {columnId, taskIds} = data
                 result = await deleteColumn(columnId, taskIds);
             }
                 break
 
             case 'updateColumnPosition':{
                 const {boardId, columnOrder} = data
-                board_id = boardId
                 result = await updateColumnPosition(boardId, columnOrder)
             }
                 break
 
             case 'createTask':{
-                const {content, columnId, boardId} = data
-                board_id = boardId
-                result = await createTask(content, columnId, boardId)
+                const {title, columnId, boardId} = data
+                result = await createTask(title, columnId, boardId)
             }
                 break
 
             case 'updateTaskPosition': {
-                const {boardId, columns, start, finish, movedTaskId} = data
-                // console.log(data)
-                board_id = boardId
+                const {columns, start, finish, movedTaskId} = data
                 result = await updateTaskPosition(columns, start, finish, movedTaskId)
                 
             }
                 break
             
             case 'editTask': {
-                const {boardId, taskId, content} = data
-                // console.log(data)
-                board_id = boardId
+                const {taskId, content} = data
                 result = await editTask(taskId, content)
                 
             }
                 break
             
             case 'deleteTask': {
-                const {boardId, taskId, columnId} = data
-                // console.log(data)
-                board_id = boardId
+                const {taskId, columnId} = data
                 result = await deleteTask(taskId, columnId)
                 
             }
@@ -181,12 +170,12 @@ async function editTask(taskId, content){
     }
 }
 
-async function createTask(content, columnId, boardId){
+async function createTask(title, columnId, boardId){
     let db = database.getDb();
 
     const newTask = {
         _id: new ObjectId(),
-        content: content,
+        content: title,
         boardId: boardId,
         columnId: columnId,
     }
@@ -234,38 +223,24 @@ async function deleteTask(taskId, columnId){
 }
 
 
-async function createColumn(columnName, boardData){
+async function createColumn(columnName, boardId){
     let db = database.getDb();
 
     const newColumn = {
         _id: new ObjectId(),
-        boardId: boardData._id,
+        boardId: boardId,
         title: columnName,
         taskIds: [],
     };
 
     try{
         let data = await db.collection(BOARD_COLLECTION_NAME).updateOne(
-            {_id: new ObjectId(boardData._id)}, 
+            {_id: new ObjectId(boardId)}, 
             {$addToSet: {columnOrder: newColumn._id.toString()}}
         )
         
         if (data.modifiedCount > 0) {
             await db.collection(COLUMN_COLLECTION_NAME).insertOne(newColumn)
-
-            // const updatedBoardData = {
-            //     ...boardData,
-            //     columns: {
-            //         ...boardData.columns,
-            //         [newColumn._id.toString()]: {
-            //             id: newColumn._id.toString(), // change _id to id for damn react dnd
-            //             boardId: newColumn.boardId,
-            //             title: newColumn.title,
-            //             taskIds: newColumn.taskIds,
-            //         },
-            //     },
-            //     columnOrder: [...boardData.columnOrder, newColumn._id.toString()],
-            // };
 
             return { success: true};
 

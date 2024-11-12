@@ -13,7 +13,70 @@ function BoardHome() {
   const { boardId } = useParams();
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [type, setType] = useState("");
-  const [action, setAction] = useState('');
+  const [action, setAction] = useState("");
+  const [activeColumn, setActiveColumn] = useState(null);
+
+  // need this cause if no, the last element rendered will replace all prev element's functions
+  const [activeElement, setActiveElement] = useState(null);
+
+  // function references
+  const [columnFuncs, setColumnFuncs] = useState({});
+  const [taskFuncs, setTaskFuncs] = useState({});
+
+  const conditionalProps =
+    type === "Column"
+      ? {
+          createFunc: (title) => handleAction("create", title),
+          deleteFunc: () => handleAction("delete"),
+          editFunc: (newTitle) => handleAction("edit", newTitle),
+          data: columnFuncs[activeElement]?.data,
+        }
+      : type === "Task"
+      ? {
+          createFunc: (title) => handleAction("create", title),
+          deleteFunc: () => handleAction("delete"),
+          editFunc: (newTitle) => handleAction("edit", newTitle),
+          data: taskFuncs[activeElement]?.data,
+        }
+      : {};
+
+  function handleAction(actionType, arg) {
+    if (actionType === "create") {
+      if (type === "Column") {
+        createColumn(arg);
+      } else if (type === "Task") {
+        createTask(activeColumn, arg);
+      }
+    } else {
+      const func =
+        type === "Column"
+          ? columnFuncs[activeElement]
+          : taskFuncs[activeElement];
+
+      if (func[actionType]) {
+        if (actionType === "edit") {
+          func.edit(arg);
+        } else if (actionType === "delete") {
+          func.delete();
+        }
+      }
+    }
+  }
+
+  function createTask(columnId, title) {
+    socket.emit("createTask", {
+      title: title,
+      columnId: columnId,
+      boardId: boardId,
+    });
+  }
+
+  function createColumn(columnName) {
+    socket.emit("createColumn", {
+      columnName: columnName,
+      boardId: boardId,
+    });
+  }
 
   //   const [initData, setInitData] = useState({
   //     tasks: {
@@ -99,14 +162,6 @@ function BoardHome() {
       boardId: newInitData._id,
       columnOrder: newInitData.columnOrder,
     });
-  }
-
-  async function createColumn(columnName) {
-    socket.emit("createColumn", {
-      columnName: columnName,
-      boardData: initData,
-    });
-    togglePopup();
   }
 
   function onDragEnd(result) {
@@ -226,6 +281,10 @@ function BoardHome() {
 
                   return (
                     <Column
+                      setActiveColumn={setActiveColumn}
+                      setActiveElement={setActiveElement}
+                      setColumnFuncs={setColumnFuncs}
+                      setTaskFuncs={setTaskFuncs}
                       setType={setType}
                       setAction={setAction}
                       togglePopup={togglePopup}
@@ -247,7 +306,7 @@ function BoardHome() {
           <FontAwesomeIcon
             onClick={() => {
               setType("Column");
-              setAction('create');
+              setAction("create");
               togglePopup();
             }}
             icon={faPlus}
@@ -261,10 +320,9 @@ function BoardHome() {
           type={type}
           action={action}
           togglePopup={togglePopup}
-          createFunc={createColumn}
+          {...conditionalProps}
         />
       )}
-
     </>
   );
 }
