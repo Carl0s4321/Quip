@@ -17,9 +17,11 @@ function Task({
 }) {
   const [editButton, setEditButton] = useState(false);
 
-  function editTask(newTitle) {
+  function editTask(newData) {
+    console.log(newData, 'newData in editTask')
     socket.emit("editTask", {
-      content: { new: newTitle, old: task.content },
+      title: newData.title,
+      content: newData.content,
       taskId: task.id,
       boardId: boardId,
     });
@@ -33,9 +35,9 @@ function Task({
     });
   }
 
-  // function createTask(content) {
+  // function createTask(title) {
   //   socket.emit("createTask", {
-  //     content: content,
+  //     title: title,
   //     columnId: columnId,
   //     boardId: boardId,
   //   });
@@ -47,7 +49,7 @@ function Task({
       [task.id]: {
         edit: editTask,
         delete: deleteTask,
-        data: { title: task.content },
+        data: { title: task.title, content: task.content},
       },
     }));
   }, [setTaskFuncs, task]);
@@ -69,14 +71,17 @@ function Task({
               onMouseEnter={() => setEditButton(true)}
               onMouseLeave={() => setEditButton(false)}
             >
-              <h2>{task.content}</h2>
+              <div className="flex flex-col">
+                <h2 className="font-semibold">{task.title}</h2>
+                <p className="text-justify">{task.content}</p>
+              </div>
 
               {editButton ? (
                 <div
                   onClick={() => {
                     setType("Task");
                     setAction("edit");
-                    setActiveElement(task.id)
+                    setActiveElement(task.id);
                     togglePopup();
                   }}
                   className="hover:cursor-pointer"
@@ -98,7 +103,7 @@ function Task({
           togglePopup={togglePopup}
           editFunc={editTask}
           deleteFunc={deleteTask}
-          data={{ title: task.content }}
+          data={{ title: task.title }}
         />
       )} */}
     </>

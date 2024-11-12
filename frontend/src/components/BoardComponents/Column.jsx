@@ -45,7 +45,7 @@ function Column({
       columnId: column.id,
       title: {
         old: column.title,
-        new: newTitle,
+        new: newTitle.title,
       },
       boardId: boardId,
     });

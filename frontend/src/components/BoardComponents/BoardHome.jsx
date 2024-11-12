@@ -35,7 +35,7 @@ function BoardHome() {
       ? {
           createFunc: (title) => handleAction("create", title),
           deleteFunc: () => handleAction("delete"),
-          editFunc: (newTitle) => handleAction("edit", newTitle),
+          editFunc: (data) => handleAction("edit", data),
           data: taskFuncs[activeElement]?.data,
         }
       : {};
@@ -55,6 +55,7 @@ function BoardHome() {
 
       if (func[actionType]) {
         if (actionType === "edit") {
+          console.log(arg, 'arg')
           func.edit(arg);
         } else if (actionType === "delete") {
           func.delete();

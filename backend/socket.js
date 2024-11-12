@@ -103,8 +103,8 @@ const initializeSocket = (server) => {
                 break
             
             case 'editTask': {
-                const {taskId, content} = data
-                result = await editTask(taskId, content)
+                const {taskId, title, content} = data
+                result = await editTask(taskId, title, content)
                 
             }
                 break
@@ -147,19 +147,22 @@ const getIo = () => {
   return io;
 };
 
-async function editTask(taskId, content){
+async function editTask(taskId, title, content){
     let db = database.getDb();
 
-    if(content.old === content.new){
-        console.log('same shit')
-        return {success:false};
-    }
+    // if(title.old === title.new){
+    //     console.log('same shit')
+    //     return {success:false};
+    // }
 
     try{
+        let updateFields = { title: title};
+        if (content) updateFields.content = content;
+
         let data = await db.collection(TASK_COLLECTION_NAME).updateOne(
-            {_id: new ObjectId(taskId)},
-            {$set: {content: content.new}}
-        )
+            { _id: new ObjectId(taskId) },
+            { $set: updateFields }
+        );
         if(data.modifiedCount > 0){
             return { success: true};
         }else{
@@ -175,7 +178,7 @@ async function createTask(title, columnId, boardId){
 
     const newTask = {
         _id: new ObjectId(),
-        content: title,
+        title: title,
         boardId: boardId,
         columnId: columnId,
     }
@@ -395,6 +398,7 @@ async function getBoard(boardId) {
       tasks.forEach(task => {
         tasksObject[task._id] = {
           id: task._id.toString(),
+          title: task.title,
           content: task.content,
         };
       });
