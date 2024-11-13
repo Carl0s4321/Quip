@@ -18,7 +18,7 @@ function Task({
   const [editButton, setEditButton] = useState(false);
 
   function editTask(newData) {
-    console.log(newData, 'newData in editTask')
+    console.log(newData, "newData in editTask");
     socket.emit("editTask", {
       title: newData.title,
       content: newData.content,
@@ -35,21 +35,13 @@ function Task({
     });
   }
 
-  // function createTask(title) {
-  //   socket.emit("createTask", {
-  //     title: title,
-  //     columnId: columnId,
-  //     boardId: boardId,
-  //   });
-  // }
-
   useEffect(() => {
     setTaskFuncs((prevFuncs) => ({
       ...prevFuncs,
       [task.id]: {
         edit: editTask,
         delete: deleteTask,
-        data: { title: task.title, content: task.content},
+        data: { title: task.title, content: task.content },
       },
     }));
   }, [setTaskFuncs, task]);
@@ -74,6 +66,7 @@ function Task({
               <div className="flex flex-col">
                 <h2 className="font-semibold">{task.title}</h2>
                 <p className="text-justify">{task.content}</p>
+                <p>Date Here</p>
               </div>
 
               {editButton ? (

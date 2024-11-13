@@ -261,6 +261,7 @@ function BoardHome() {
   return (
     <>
       <h1 className="text-2xl font-semibold">{initData.name}</h1>
+
       <div className="flex flex-row">
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable

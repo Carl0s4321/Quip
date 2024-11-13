@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faX } from "@fortawesome/free-solid-svg-icons";
+import { faX, faCalendarDays } from "@fortawesome/free-solid-svg-icons";
+import Calendar from "react-calendar";
+import { differenceInCalendarDays, isWithinInterval } from "date-fns";
+import "react-calendar/dist/Calendar.css";
 
 /**
  * General handler to show Popup
@@ -17,9 +20,11 @@ const Popup = ({
   deleteFunc,
   data,
 }) => {
+  const [showCalendar, setShowCalendar] = useState(false);
+
   const [formData, setFormData] = useState({
     title: "",
-    content:"",
+    content: "",
     dueDate: "",
     image: "",
   });
@@ -89,7 +94,7 @@ const Popup = ({
           name: "content",
           placeholder: "Type something here...",
         },
-        { label: "Due Date", name: "dueDate", placeholder: "Due Date" },
+        { label: "Due Date", name: "date", placeholder: "Due Date" },
         { label: "Image URL", name: "image", placeholder: "Image URL" },
       ],
     },
@@ -99,6 +104,39 @@ const Popup = ({
     action === "create"
       ? fieldsConfig[type].createFields
       : fieldsConfig[type].editFields;
+
+  const [date, setDate] = useState(new Date());
+
+  const disabledRanges = [[1, 5]];
+
+  function isWithinRange(date, range) {
+    return isWithinInterval(date, { start: range[0], end: range[1] });
+  }
+
+  function isWithinRanges(date, ranges) {
+    return ranges.some((range) => isWithinRange(date, range));
+  }
+
+  function tileDisabled({ date, view }) {
+    // Add class to tiles in month view only
+    if (view === "month") {
+      // Check if a date React-Calendar wants to check is within any of the ranges
+      return isWithinRanges(date, disabledRanges);
+    }
+  }
+
+  function isSameDay(a, b) {
+    console.log(a, " a | b ", b);
+    return differenceInCalendarDays(a, b) === 0;
+  }
+
+  function tileDisabled({ date, view }) {
+    // Add class to tiles in month view only
+    if (view === "month") {
+      // Check if a date React-Calendar wants to check is within any of the ranges
+      return isWithinRanges(date, disabledRanges);
+    }
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen">
@@ -127,6 +165,21 @@ const Popup = ({
                     placeholder={field.placeholder}
                     required={action === "create" && field.name === "name"}
                   />
+                ) : field.name === "date" ? (
+                  <>
+                    {/* https://dev.to/fitzgeraldkd/react-calendar-with-custom-styles-30c9 */}
+                    <div className="p-2 border-black flex flex-row items-center justify-between">
+                      {!showCalendar && date.toDateString()}
+                      <FontAwesomeIcon icon={faCalendarDays}  className="cursor-pointer" onClick={()=>setShowCalendar(!showCalendar)}/>
+                    </div>
+                    {showCalendar && (
+                      <Calendar
+                        value={date}
+                        onChange={setDate}
+                        tileDisabled={tileDisabled}
+                      />
+                    )}
+                  </>
                 ) : (
                   <input
                     type="text"
