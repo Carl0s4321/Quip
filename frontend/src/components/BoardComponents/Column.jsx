@@ -21,6 +21,8 @@ function Column({
   const [editButton, setEditButton] = useState(false);
 
   useEffect(() => {
+    console.log(column)
+    console.log(tasks)
     setColumnFuncs((prevFuncs) => ({
       ...prevFuncs,
       [column.id]: {
@@ -52,20 +54,20 @@ function Column({
   }
 
   return (
-    <>
+    <div className="w-[300px]">
       <Draggable draggableId={column.id} key={column.id} index={index}>
         {(provided) => (
           <div
-            className="m-2 border-2 border-black w-full flex flex-col"
+            className="m-2 rounded-md bg-gray-200 w-full flex flex-col"
             {...provided.draggableProps}
             ref={provided.innerRef}
           >
             <div
-              className="flex flex-row px-5 p-2 bg-yellow-500 justify-between"
+              className="flex flex-row px-5 p-2 font-bold justify-between"
               onMouseEnter={() => setEditButton(true)}
               onMouseLeave={() => setEditButton(false)}
             >
-              <h2 {...provided.dragHandleProps} className="grow">
+              <h2 {...provided.dragHandleProps} className="grow text-black-200">
                 {column.title}
               </h2>
 
@@ -77,7 +79,7 @@ function Column({
                     setActiveElement(column.id);
                     togglePopup();
                   }}
-                  className="hover:cursor-pointer"
+                  className="edit-button"
                 >
                   <FontAwesomeIcon icon={faPencil} />
                 </div>
@@ -88,7 +90,7 @@ function Column({
                 <div className="flex flex-col h-full">
                   <div
                     className={`${
-                      snapshot.isDraggingOver ? "bg-green-400" : ""
+                      snapshot.isDraggingOver ? "bg-lightBlue" : ""
                     } p-2 transition-colors duration-200 ease-in-out flex-grow min-h-28`}
                     {...provided.droppableProps}
                     ref={provided.innerRef}
@@ -132,7 +134,7 @@ function Column({
           </div>
         )}
       </Draggable>
-    </>
+    </div>
   );
 }
 

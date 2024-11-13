@@ -29,10 +29,11 @@ const Popup = ({
     image: "",
   });
 
-  const [date, setDate] = useState(data.dueDate);
+  const [date, setDate] = useState();
 
   useEffect(() => {
     if (action === "edit" && data) {
+      setDate(data.dueDate)
       setFormData({
         title: data.title || "",
         content: data.content || "",
@@ -141,7 +142,11 @@ const Popup = ({
                     <div className="border-black flex flex-row items-center justify-between">
                       <input
                         className="border border-gray-300 p-2 w-full"
-                        value={date ? new Date(date).toDateString() : "No due date set"}
+                        value={
+                          date
+                            ? new Date(date).toDateString()
+                            : "No due date set"
+                        }
                         readOnly
                       />
                       <FontAwesomeIcon

@@ -151,50 +151,17 @@ boardRoutes.route('/boards/columns/create/:columnName').post(async (request,resp
 
 })
 
-// // update one
-// boardRoutes.route('/users/:id').put(verifyToken, async (request,response) => {
-//     let db = database.getDb();
-//     let updatedUserInfo = {
-//         name: request.body.name,
-//         email: request.body.email,
-//         password: request.body.password,
-//     };
-
-//     let mongoObject = { $set: updatedUserInfo };
-//     let data = await db.collection(BOARD_COLLECTION_NAME).updateOne({_id: new ObjectId(request.params.id)}, mongoObject);
-
-//     if (data.modifiedCount > 0) {
-//         // generate new token with updated user info
-//         const tokenPayload = {
-//             _id: request.params.id,
-//             name: updatedUserInfo.name,
-//             email: updatedUserInfo.email,
-//             password: request.body.password,
-//         };
-//         const token = jwt.sign(tokenPayload, process.env.SECRET_KEY, { expiresIn: '24h' });
-        
-//         return response.json({
-//             success: true,
-//             message: 'User updated successfully',
-//             token: token,
-//         });
-//     } else {
-//         return response.status(400).json({
-//             success: false,
-//             message: 'Failed to update user',
-//         });
-//     }
-// })
-
 // delete one
 boardRoutes.route('/boards/delete/:id').delete(verifyToken, async (request,response) => {
     let db = database.getDb();
     try{
         let data = await db.collection(BOARD_COLLECTION_NAME).deleteOne({_id: new ObjectId(request.params.id)})
-
         if (data.deletedCount === 0) {
             return response.status(404).json({ error: "Board not found" });
         }
+        let deletedCol = await db.collection(COLUMN_COLLECTION_NAME).deleteMany({boardId: request.params.id})
+        let deletedRow = await db.collection(TASK_COLLECTION_NAME).deleteMany({boardId: request.params.id})
+        
 
         response.json({ message: "Board deleted successfully", data });
     } catch(error){
@@ -202,28 +169,6 @@ boardRoutes.route('/boards/delete/:id').delete(verifyToken, async (request,respo
         response.status(500).json({ error: "An error occurred while deleting the board" });
     }
 })
-
-// // login
-// boardRoutes.route('/users/login').post(async (request,response) => {
-//     let db = database.getDb();
-    
-//     const user = await db.collection(BOARD_COLLECTION_NAME).findOne({email: request.body.email})
-//     if(user){
-//         bcrypt.compare(request.body.password, user.password, (err, data) => {
-//             //if error then throw error
-//             if (err) throw err
-
-//             if (data) {
-//                 const token = jwt.sign(user, process.env.SECRET_KEY, {expiresIn: '24h'})
-//                 return response.json({success:true, token})
-//             } else {
-//                 return response.json({success:false, message: "Incorrect email/password"})
-//             }
-//         })
-//     }else{
-//         return response.json({success:false, message: "Account not found"})
-//     }
-// })
 
 // if verified, go to next
 function verifyToken(request, response, next){

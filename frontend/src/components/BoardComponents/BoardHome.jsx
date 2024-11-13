@@ -271,7 +271,7 @@ function BoardHome() {
           >
             {(provided) => (
               <div
-                className="flex flex-row grow"
+                className="flex flex-row gap-5 w-full overflow-x-scroll custom-scrollbar"
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >

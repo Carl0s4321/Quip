@@ -65,27 +65,35 @@ function Task({
   }, [setTaskFuncs, task]);
 
   return (
-    <>
+    <div>
       <Draggable draggableId={task.id} key={task.id} index={index}>
         {(provided, snapshot) => (
           <div
             className={`${
-              snapshot.isDragging ? "bg-blue-400" : ""
-            } border-2 border-black mb-2`}
+              snapshot.isDragging ? "bg-gray-400" : "bg-white-100"
+            } rounded-md mb-2`}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}
           >
             <div
-              className="p-2 flex w-full h-full flex-row justify-between px-5 bg-red-500"
+              className="p-2 flex flex-row justify-between px-5 "
               onMouseEnter={() => setEditButton(true)}
               onMouseLeave={() => setEditButton(false)}
             >
-              <div className="flex flex-col">
+              <div className="flex flex-col gap-1 overflow-hidden">
                 <h2 className="font-semibold">{task.title}</h2>
-                <p className="text-justify">{task.content}</p>
+                <p className="break-words">{task.content}</p>
                 {task.dueDate && (
-                  <div className="flex flex-row gap-2 items-center">
+                  <div
+                    className={`${
+                      daysLeft < 5
+                        ? daysLeft < 3
+                          ? "bg-red-800"
+                          : "bg-yellow-600"
+                        : "bg-green-800"
+                    } text-xs text-white flex flex-row gap-2 items-center w-fit p-2 rounded-md`}
+                  >
                     <FontAwesomeIcon icon={faClock} />
                     <p>
                       {daysLeft >= 0 ? (
@@ -108,7 +116,7 @@ function Task({
                     setActiveElement(task.id);
                     togglePopup();
                   }}
-                  className="hover:cursor-pointer"
+                  className="edit-button"
                 >
                   <FontAwesomeIcon icon={faPencil} />
                 </div>
@@ -130,7 +138,7 @@ function Task({
           data={{ title: task.title }}
         />
       )} */}
-    </>
+    </div>
   );
 }
 
