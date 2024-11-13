@@ -1,4 +1,9 @@
-import { faCheck, faX, faPencil } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faX,
+  faPencil,
+  faClock,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Draggable } from "@hello-pangea/dnd";
 import { useEffect, useState } from "react";
@@ -16,12 +21,13 @@ function Task({
   boardId,
 }) {
   const [editButton, setEditButton] = useState(false);
+  const [daysLeft, setDaysLeft] = useState(0);
 
   function editTask(newData) {
-    console.log(newData, "newData in editTask");
     socket.emit("editTask", {
       title: newData.title,
       content: newData.content,
+      dueDate: newData.dueDate,
       taskId: task.id,
       boardId: boardId,
     });
@@ -35,13 +41,25 @@ function Task({
     });
   }
 
+  function countDaysLeft(currDate, dueDate) {
+    // console.log(currDate, "to", dueDate);
+    return Math.round((dueDate - currDate) / (1000 * 60 * 60 * 24));
+  }
+
   useEffect(() => {
+    // console.log(task.dueDate , typeof task.dueDate)
+    setDaysLeft(countDaysLeft(new Date(), new Date(task.dueDate)));
+
     setTaskFuncs((prevFuncs) => ({
       ...prevFuncs,
       [task.id]: {
         edit: editTask,
         delete: deleteTask,
-        data: { title: task.title, content: task.content },
+        data: {
+          title: task.title,
+          content: task.content,
+          dueDate: task.dueDate,
+        },
       },
     }));
   }, [setTaskFuncs, task]);
@@ -66,7 +84,20 @@ function Task({
               <div className="flex flex-col">
                 <h2 className="font-semibold">{task.title}</h2>
                 <p className="text-justify">{task.content}</p>
-                <p>Date Here</p>
+                {task.dueDate && (
+                  <div className="flex flex-row gap-2 items-center">
+                    <FontAwesomeIcon icon={faClock} />
+                    <p>
+                      {daysLeft >= 0 ? (
+                        <span>
+                          {daysLeft} {daysLeft > 1 ? "Days" : "Day"}
+                        </span>
+                      ) : (
+                        "Past Due Date!"
+                      )}
+                    </p>
+                  </div>
+                )}
               </div>
 
               {editButton ? (

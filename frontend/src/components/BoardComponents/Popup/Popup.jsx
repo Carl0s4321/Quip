@@ -29,6 +29,8 @@ const Popup = ({
     image: "",
   });
 
+  const [date, setDate] = useState(data.dueDate);
+
   useEffect(() => {
     if (action === "edit" && data) {
       setFormData({
@@ -42,8 +44,9 @@ const Popup = ({
 
   function handleInputChange(e) {
     const { name, value } = e.target;
+    // console.log(name, value);
     setFormData((prev) => ({ ...prev, [name]: value }));
-    console.log("input change", formData);
+    // console.log("input change", formData);
   }
 
   function handleSubmit(e) {
@@ -105,43 +108,10 @@ const Popup = ({
       ? fieldsConfig[type].createFields
       : fieldsConfig[type].editFields;
 
-  const [date, setDate] = useState(new Date());
-
-  const disabledRanges = [[1, 5]];
-
-  function isWithinRange(date, range) {
-    return isWithinInterval(date, { start: range[0], end: range[1] });
-  }
-
-  function isWithinRanges(date, ranges) {
-    return ranges.some((range) => isWithinRange(date, range));
-  }
-
-  function tileDisabled({ date, view }) {
-    // Add class to tiles in month view only
-    if (view === "month") {
-      // Check if a date React-Calendar wants to check is within any of the ranges
-      return isWithinRanges(date, disabledRanges);
-    }
-  }
-
-  function isSameDay(a, b) {
-    console.log(a, " a | b ", b);
-    return differenceInCalendarDays(a, b) === 0;
-  }
-
-  function tileDisabled({ date, view }) {
-    // Add class to tiles in month view only
-    if (view === "month") {
-      // Check if a date React-Calendar wants to check is within any of the ranges
-      return isWithinRanges(date, disabledRanges);
-    }
-  }
-
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-        <div className="relative bg-white rounded-lg shadow-lg p-6 w-80">
+        <div className="relative bg-white rounded-lg shadow-lg p-6 w-100 max-h-[450px] overflow-y-scroll">
           <button
             className="absolute top-3 right-5 text-gray-500 hover:text-gray-700"
             onClick={togglePopup}
@@ -168,15 +138,29 @@ const Popup = ({
                 ) : field.name === "date" ? (
                   <>
                     {/* https://dev.to/fitzgeraldkd/react-calendar-with-custom-styles-30c9 */}
-                    <div className="p-2 border-black flex flex-row items-center justify-between">
-                      {!showCalendar && date.toDateString()}
-                      <FontAwesomeIcon icon={faCalendarDays}  className="cursor-pointer" onClick={()=>setShowCalendar(!showCalendar)}/>
+                    <div className="border-black flex flex-row items-center justify-between">
+                      <input
+                        className="border border-gray-300 p-2 w-full"
+                        value={date ? new Date(date).toDateString() : "No due date set"}
+                        readOnly
+                      />
+                      <FontAwesomeIcon
+                        icon={faCalendarDays}
+                        className="cursor-pointer text-xl p-3 bg-lightBlue text-white hover:bg-darkBlue"
+                        onClick={() => setShowCalendar(!showCalendar)}
+                      />
                     </div>
                     {showCalendar && (
                       <Calendar
-                        value={date}
-                        onChange={setDate}
-                        tileDisabled={tileDisabled}
+                        type="date"
+                        name={field.name}
+                        onChange={(date) => {
+                          setDate(date);
+                          handleInputChange({
+                            target: { value: date, name: "dueDate" },
+                          });
+                        }}
+                        minDate={new Date()}
                       />
                     )}
                   </>

@@ -103,8 +103,8 @@ const initializeSocket = (server) => {
                 break
             
             case 'editTask': {
-                const {taskId, title, content} = data
-                result = await editTask(taskId, title, content)
+                const {taskId, title, content, dueDate} = data
+                result = await editTask(taskId, title, content, dueDate)
                 
             }
                 break
@@ -147,7 +147,7 @@ const getIo = () => {
   return io;
 };
 
-async function editTask(taskId, title, content){
+async function editTask(taskId, title, content, dueDate){
     let db = database.getDb();
 
     // if(title.old === title.new){
@@ -158,6 +158,7 @@ async function editTask(taskId, title, content){
     try{
         let updateFields = { title: title};
         if (content) updateFields.content = content;
+        if(dueDate) updateFields.dueDate = new Date(dueDate);
 
         let data = await db.collection(TASK_COLLECTION_NAME).updateOne(
             { _id: new ObjectId(taskId) },
@@ -400,6 +401,7 @@ async function getBoard(boardId) {
           id: task._id.toString(),
           title: task.title,
           content: task.content,
+          dueDate: task.dueDate || null,
         };
       });
   
