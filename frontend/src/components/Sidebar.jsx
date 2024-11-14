@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import useUserStore from "../store/UserStore";
-import Chat from "./ChatComponents/Chat";
 
 function Sidebar({ setOpenPanel, openPanel }) {
   const [isOpen, setIsOpen] = useState(false);

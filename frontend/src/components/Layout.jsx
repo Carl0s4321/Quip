@@ -6,7 +6,7 @@ import "./sidebar.css";
 import Sidebar from "./Sidebar";
 import useUserStore from "../store/UserStore";
 import { jwtDecode } from "jwt-decode";
-import Chat from "./ChatComponents/Chat";
+import Chats from "./ChatComponents/Chats";
 
 export function Layout() {
   const navigate = useNavigate();
@@ -19,8 +19,10 @@ export function Layout() {
       navigate("/");
     } else {
       const decodedUser = jwtDecode(user_SS);
+      console.log(decodedUser)
       setUser(decodedUser);
     }
+
   }, []);
 
   if (!user) {
@@ -33,7 +35,7 @@ export function Layout() {
       <div className="mx-10 md:mx-20">
         <div className="relative">
           <Sidebar openPanel={openPanel} setOpenPanel={setOpenPanel} />
-          <Chat openPanel={openPanel}/>
+          <Chats openPanel={openPanel}/>
         </div>
         <section className="home-section p-5">
           <Outlet />

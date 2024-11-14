@@ -80,11 +80,14 @@ export async function deleteBoard(boardId) {
     }
 }
 
-export async function createColumn(columnName, initData){
-    const response = await axios.post(`${URL}/boards/columns/create/${columnName}`, initData)
-    if(response.status === 200){
-        return response.data
-    }else{
-        return
+export async function getUserChats(user){
+    if(user?._id){
+        const response = await axios.get(`${URL}/chat/${user._id}`)
+
+        if(response.status === 200){
+            return response.data
+        }else{
+            return response
+        }
     }
 }

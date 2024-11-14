@@ -1,19 +1,47 @@
-/* Sidebar container styling */
+/* panel container styling */
 .panel {
-    position: fixed;
-    left: 78px;
-    top: 0;
-    height: 100%;
-    width: 0px; /* Default sidebar width */
-    background: #1d1c31; /* Dark background color for sidebar */
-    /* padding: 6px 14px; */
-    opacity: 0;
-    z-index: 98; /* Ensures sidebar is on top */
-    transition: all 0.5s ease; /* Smooth transition for width change */
-  }
+  position: fixed;
+  left: 78px;
+  top: 0;
+  height: 100%;
+  width: 0px; /* Default panel width */
+  background: #1d1c31; /* Dark background color for panel */
+  /* padding: 6px 14px; */
+  opacity: 0;
+  z-index: 98; /* Ensures panel is on top */
+  transition: all 0.5s ease; /* Smooth transition for width change */
+  overflow-x: hidden;
+}
 
-  /* Expanded sidebar styles */
+/* Expanded panel styles */
 .panel.open {
-    width: 350px; /* Expanded sidebar width */
-    opacity: 100%;
-  }
+  width: 300px; /* Expanded panel width */
+  opacity: 100%;
+}
+
+.modal{
+  position: absolute;
+  top: 65px;
+  z-index: 999;
+  background: #1d1c31;
+  box-shadow: 0 5px 10px rgba(1, 1, 1, 0.7);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 15px;
+  font-weight: 400;
+  transition: 0s;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px; 
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: violet; 
+  border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background-color: transparent;
+}

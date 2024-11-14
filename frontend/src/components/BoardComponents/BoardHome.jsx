@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { createColumn, getBoard } from "../../api";
 import Column from "./Column";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faStar as faStarFilled, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
-import BoardPopup from "./Popup/BoardPopup";
 import socket from "../../utils/socket";
 import Popup from "./Popup/Popup";
 

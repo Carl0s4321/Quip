@@ -21,7 +21,7 @@ userRoutes.route('/users').get(verifyToken, async (request,response) => {
     if(data.length > 0){
         response.json(data);
     } else{
-        throw new Error("Data not found")
+        response.status(400).json(response.data)
     }
 })
 
@@ -55,6 +55,7 @@ userRoutes.route('/users').post(async (request,response) => {
           name: request.body.name,
           email: request.body.email,
           password: hash,
+          friends:[],
         };
     
         let data = await db.collection(USER_COLLECTION_NAME).insertOne(mongoObject);

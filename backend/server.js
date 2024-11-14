@@ -4,6 +4,8 @@ const cors = require('cors')
 const http = require("http");
 const users = require('./userRoutes')
 const boards = require('./boardRoutes')
+const chats = require('./chatRoutes')
+const messages = require('./messageRoutes')
 const { initializeSocket } = require("./socket");
 
 const app = express();
@@ -14,6 +16,8 @@ app.use(cors());
 app.use(express.json());
 app.use(users) // mounts to userRoutes
 app.use(boards)
+app.use(chats)
+app.use(messages)
 
 initializeSocket(server);
 
