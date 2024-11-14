@@ -1,0 +1,19 @@
+/* Sidebar container styling */
+.panel {
+    position: fixed;
+    left: 78px;
+    top: 0;
+    height: 100%;
+    width: 0px; /* Default sidebar width */
+    background: #1d1c31; /* Dark background color for sidebar */
+    /* padding: 6px 14px; */
+    opacity: 0;
+    z-index: 98; /* Ensures sidebar is on top */
+    transition: all 0.5s ease; /* Smooth transition for width change */
+  }
+
+  /* Expanded sidebar styles */
+.panel.open {
+    width: 350px; /* Expanded sidebar width */
+    opacity: 100%;
+  }

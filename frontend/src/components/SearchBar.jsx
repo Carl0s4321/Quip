@@ -12,7 +12,7 @@ function SearchBar() {
           type="text"
           onChange={(e) => setSearchString(e.target.value)}
           value={searchString}
-          className="w-full outline-none py-3 pl-12 rounded-full"
+          className="w-full outline-none py-3 pl-12 rounded-full bg-gray-200"
           placeholder="Search a board..."
         />
 

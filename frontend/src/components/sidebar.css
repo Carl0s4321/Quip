@@ -64,11 +64,6 @@
   line-height: 60px; /* Centers icon vertically */
 }
 
-/* Sidebar navigation list styling */
-.sidebar .nav-list {
-  height: calc(100% - 140px); /* Leaves space for logo and profile */
-}
-
 /* Scrollbar styles for sidebar */
 .sidebar .scroll {
   overflow-y: auto; /* Enables vertical scrolling */
@@ -165,42 +160,6 @@
   align-items: center;
   flex-wrap: nowrap;
 }
-.sidebar li img {
-  height: 45px;
-  width: 45px;
-  object-fit: cover;
-  border-radius: 6px;
-  margin-right: 10px;
-}
-
-/* Sidebar input (search) styling */
-.sidebar input {
-  font-size: 15px;
-  color: #FFF;
-  font-weight: 400;
-  outline: none;
-  height: 50px;
-  width: 50px; /* Default width for search input */
-  border: none;
-  border-radius: 12px;
-  transition: all 0.5s ease;
-  background: #1d1b31; /* Input background color */
-}
-
-/* Search button styling */
-.sidebar .bx-search {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  font-size: 22px;
-  background: #1d1b31;
-  color: #FFF;
-}
-.sidebar .bx-search:hover {
-  background: #FFF; /* Hover background color */
-  color: #11101d; /* Hover text color */
-}
 
 /* Profile section styling */
 .sidebar li.profile {
@@ -246,9 +205,7 @@
 .sidebar.open {
   width: 250px; /* Expanded sidebar width */
 }
-.sidebar.open .logo-details .icon {
-  opacity: 1; /* Shows icon in expanded state */
-}
+
 .sidebar.open .logo-details .logo_name {
   opacity: 1; /* Shows logo name in expanded state */
 }
@@ -262,14 +219,7 @@
   opacity: 1; /* Shows link names when expanded */
   pointer-events: auto;
 }
-.sidebar.open input {
-  padding: 0 20px 0 50px;
-  width: 100%; /* Expands input width */
-}
-.sidebar.open .bx-search:hover {
-  background: #1d1b31;
-  color: #FFF;
-}
+
 .sidebar.open li.profile {
   width: 250px; /* Expands profile section */
 }
@@ -285,7 +235,7 @@
 /* Main content (home section) styling */
 .home-section {
   position: relative;
-  background: #E4E9F7; /* Light background for main content */
+  /* background: #E4E9F7; */
   min-height: 100vh;
   top: 0;
   left: 78px;

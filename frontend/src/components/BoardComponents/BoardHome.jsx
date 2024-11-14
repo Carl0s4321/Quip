@@ -4,7 +4,8 @@ import { createColumn, getBoard } from "../../api";
 import Column from "./Column";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faStar as faStarFilled, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 import BoardPopup from "./Popup/BoardPopup";
 import socket from "../../utils/socket";
 import Popup from "./Popup/Popup";
@@ -55,7 +56,7 @@ function BoardHome() {
 
       if (func[actionType]) {
         if (actionType === "edit") {
-          console.log(arg, 'arg')
+          console.log(arg, "arg");
           func.edit(arg);
         } else if (actionType === "delete") {
           func.delete();
@@ -260,9 +261,18 @@ function BoardHome() {
 
   return (
     <>
-      <h1 className="text-2xl font-semibold">{initData.name}</h1>
+      <div className="flex flex-row gap-5 items-center mb-3">
+        <h1 className="text-2xl font-semibold">{initData.name}</h1>
+        <button className="custom-button">
+          <FontAwesomeIcon className="text-xl" icon={faStarRegular} />
+        </button>
+        <button className="custom-button">
+          <FontAwesomeIcon icon={faUserPlus} className="mr-3" />
+          Share
+        </button>
+      </div>
 
-      <div className="flex flex-row">
+      <div className="flex flex-row gap-5">
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable
             droppableId="all-columns"
@@ -271,7 +281,7 @@ function BoardHome() {
           >
             {(provided) => (
               <div
-                className="flex flex-row gap-5 w-full overflow-x-scroll custom-scrollbar"
+                className="flex flex-row gap-5 shrink max-w-full overflow-x-scroll custom-scrollbar"
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
