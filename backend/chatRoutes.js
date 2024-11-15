@@ -61,7 +61,8 @@ chatRoutes.route('/chat/create').post(async (request,response) => {
         if (chat) return response.status(200).json(chat)
 
         const newChat = {
-            members: [firstId, secondId]
+            members: [firstId, secondId],
+            lastUpdated: new  Date(),
         }
         const data = await db.collection(CHAT_COLLECTION_NAME).insertOne(newChat)
 

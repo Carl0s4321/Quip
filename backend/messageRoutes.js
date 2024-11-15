@@ -35,7 +35,10 @@ messageRoutes.route('/message/create').post(async (request,response) => {
 
     try{
         const newMessage = {
-           chatId, senderId, text
+           chatId: chatId,
+           senderId: senderId,
+           text: text,
+           timeStamp: new Date(),
         }
 
         const data = await db.collection(MESSAGE_COLLECTION_NAME).insertOne(newMessage)

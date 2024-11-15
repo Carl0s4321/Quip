@@ -3,18 +3,27 @@ import "../Panel.css";
 import SearchBar from "../SearchBar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { createChat } from "../../api";
+import useUserStore from "../../store/UserStore";
 
 function CreateChatModal({ filteredFriends, setShowPopup }) {
   const [selectedFriend, setSelectedFriend] = useState({});
   const [searchString, setSearchString] = useState("");
   const [showErr, setShowErr] = useState(false);
+  const {user} = useUserStore();
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    if (Object.keys(selectedFriend).length === 0) {
+    if (
+      Object.keys(selectedFriend).length === 0 ||
+      selectedFriend.name === null ||
+      selectedFriend.id === null
+    ) {
       setShowErr(true);
     } else {
-      console.log(selectedFriend.name, selectedFriend.id);
+        const response = await createChat(user._id, selectedFriend.id)
+        console.log(response)
+    //   console.log(selectedFriend.name, selectedFriend.id);
       setShowPopup(false);
     }
   }
@@ -55,6 +64,7 @@ function CreateChatModal({ filteredFriends, setShowPopup }) {
                   setSelectedFriend(filteredFriend);
                   setShowErr(false);
                 }}
+                key={filteredFriend.id}
                 className={`${
                   selectedFriend.id === filteredFriend.id
                     ? " border-2 border-white border-solid"

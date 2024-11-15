@@ -91,3 +91,34 @@ export async function getUserChats(user){
         }
     }
 }
+
+export async function createChat(firstId, secondId){
+    if(firstId && secondId){
+        const response = await axios.post(`${URL}/chat/create`, {firstId, secondId})
+        if(response.status === 200){
+            return response.data
+        }else{
+            return response.error
+        }
+    }
+}
+
+export async function getMessages(chat){
+    if(chat){
+        const response = await axios.get(`${URL}/message/${chat._id}`)
+        if(response.status === 200){
+            return response.data
+        }else{
+            return response
+        }
+    }
+}
+
+export async function createMessage(chatId, senderId, text){
+    const response = await axios.post(`${URL}/message/create`, {chatId, senderId, text})
+    if(response.status === 200){
+        return response.data
+    }else{
+        return response
+    }
+}
