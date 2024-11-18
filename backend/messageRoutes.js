@@ -40,10 +40,9 @@ messageRoutes.route('/message/create').post(async (request,response) => {
            text: text,
            timeStamp: new Date(),
         }
-
-        const data = await db.collection(MESSAGE_COLLECTION_NAME).insertOne(newMessage)
-
-        response.status(200).json(data)
+        
+        await db.collection(MESSAGE_COLLECTION_NAME).insertOne(newMessage)
+        response.status(200).json(newMessage)
 
     }catch(error){
         console.log(error)

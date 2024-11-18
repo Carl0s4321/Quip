@@ -118,7 +118,8 @@ function BoardHome() {
 
   useEffect(() => {
     socket.connect();
-    console.log("client connected");
+
+    socket.on('connect', () => {console.log('client connected: ', socket.id)});
     socket.emit("userConnected", { boardId });
 
     socket.on("refreshBoardData", (boardData) => {
@@ -135,9 +136,9 @@ function BoardHome() {
 
     // Cleanup event listeners on component unmount
     return () => {
+      console.log("client disconnected: ", socket.id);
       socket.removeAllListeners();
       socket.disconnect();
-      console.log("client disconnected");
     };
   }, [boardId]);
 
