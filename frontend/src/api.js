@@ -131,3 +131,12 @@ export async function createFriendReq(senderId, receiverId){
         return response
     }
 }
+
+export async function getFriendRequests(user){
+    const response = await axios.get(`${URL}/friendReqs/${user._id}`)
+    if(response.status === 200){
+        return response.data
+    }else{
+        return response
+    }
+}

@@ -7,7 +7,7 @@ import { faUser, faPencil, faArrowLeft } from "@fortawesome/free-solid-svg-icons
 import axios from "axios";
 import useUserStore from "../store/UserStore";
 import SearchBar from "../components/SearchBar";
-import AddFriend from "../components/AddFriend";
+import AddFriend from "../components/AddFriendComponents/AddFriend";
 
 export function Profile() {
   const {user} = useUserStore();
@@ -74,6 +74,7 @@ export function Profile() {
             </div>
             <div className="flex flex-col items-center md:items-start">
               <h1 className="font-bold text-3xl">My Profile</h1>
+              <p>{user._id}</p>
               <form onSubmit={handleSubmit} className="flex flex-col mt-5 gap-4">
                 <div className="flex flex-col">
                   <span>NAME</span>

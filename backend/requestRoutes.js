@@ -12,19 +12,28 @@ const USER_COLLECTION_NAME = "users";
 
 // make CRUD operations:
 // retrieve all
-// http://localhost:3000/users
+requestRoutes
+  .route("/friendReqs/:userId")
+  .get(verifyToken, async (request, response) => {
+    let db = database.getDb();
+    try {
+      let incomingReqs = await db
+        .collection(REQUEST_COLLECTION_NAME)
+        .find({ receiverId: request.params.userId })
+        .toArray();
+      let outgoingReqs = await db
+        .collection(REQUEST_COLLECTION_NAME)
+        .find({ senderId: request.params.userId })
+        .toArray();
 
-// do verifyToken, if token is verified we run the get function otherwise throw error.
-// requestRoutes.route('/users').get(verifyToken, async (request,response) => {
-//     let db = database.getDb();
-//     let data = await db.collection(REQUEST_COLLECTION_NAME).find({}).toArray();
+      console.log('incoming:', incomingReqs ,"\noutgoing:", outgoingReqs)
 
-//     if(data.length > 0){
-//         response.json(data);
-//     } else{
-//         response.status(400).json(response.data)
-//     }
-// })
+      response.status(200).json({ incomingReqs, outgoingReqs });
+    } catch (error) {
+      console.error(error.message);
+      response.status(500).json(error);
+    }
+  });
 
 // retrieve one
 // http://localhost:3000/users/12345
@@ -40,14 +49,6 @@ const USER_COLLECTION_NAME = "users";
 // })
 
 // create one
-// route can be same but use different methods (get/post)
-
-// function error(msg, status = 500) {
-//     let err = new Error(msg);
-//     err.status = status;
-//     throw err;
-// }
-
 requestRoutes.route("/friendReqs/create").post(async (request, response) => {
   let db = database.getDb();
   const { senderId, receiverId } = request.body;
