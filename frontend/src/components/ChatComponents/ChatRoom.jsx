@@ -81,7 +81,7 @@ function ChatRoom({ setShowChatRoom, selectedChat }) {
             setShowChatRoom(false);
           }}
           icon={faArrowLeft}
-          className="cursor-pointer"
+          className="cursor-pointer fixed z-[999]"
         />
         <span className="flex-1 text-center">ChatRoom</span>
       </div>

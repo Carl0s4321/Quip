@@ -1,6 +1,6 @@
 import "../Panel.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faUser, faX } from "@fortawesome/free-solid-svg-icons";
+import { faPlus} from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { faFaceSadTear } from "@fortawesome/free-regular-svg-icons";
 import { getUserChats } from "../../api";

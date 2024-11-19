@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX, faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import Calendar from "react-calendar";
-import { differenceInCalendarDays, isWithinInterval } from "date-fns";
 import "react-calendar/dist/Calendar.css";
 
 /**

@@ -6,6 +6,7 @@ const users = require('./userRoutes')
 const boards = require('./boardRoutes')
 const chats = require('./chatRoutes')
 const messages = require('./messageRoutes')
+const friendReqs = require('./requestRoutes')
 const { initializeSocket } = require("./socket");
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(users) // mounts to userRoutes
 app.use(boards)
 app.use(chats)
 app.use(messages)
+app.use(friendReqs)
 
 initializeSocket(server);
 

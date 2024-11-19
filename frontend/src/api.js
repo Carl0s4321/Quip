@@ -122,3 +122,12 @@ export async function createMessage(chatId, senderId, text){
         return response
     }
 }
+
+export async function createFriendReq(senderId, receiverId){
+    const response = await axios.post(`${URL}/friendReqs/create`, {senderId, receiverId})
+    if(response.status === 200){
+        return response.data
+    }else{
+        return response
+    }
+}
