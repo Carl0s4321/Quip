@@ -1,142 +1,167 @@
 import axios from "axios";
 
-const URL ="http://localhost:3000"
+const URL = "http://localhost:3000";
 
 export async function getUsers() {
-    const response = await axios.get(`${URL}/users`);
+  const response = await axios.get(`${URL}/users`);
 
-    if(response.status === 200){
-        return response.data
-    }else{
-        return
-    }
+  if (response.status === 200) {
+    return response.data;
+  } else {
+    return;
+  }
 }
 export async function getUser(id) {
+  try {
     const response = await axios.get(`${URL}/users/${id}`);
-
-    if(response.status === 200){
-        return response.data
-    }else{
-        return
-    }
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : new Error("Network Error");
+  }
 }
 export async function createUser(user) {
-    const response = await axios.post(`${URL}/users`, user);
-    return response;
+  const response = await axios.post(`${URL}/users`, user);
+  return response;
 }
-export async function updateUser(id, user) {
-    const response = await axios.put(`${URL}/users/${id}`, user);
+export async function updateUser(user) {
+  const response = await axios.put(`${URL}/users/${user._id}`, user);
+  if (response.status === 200) {
+    return response.data;
+  } else {
     return response;
+  }
 }
 export async function deleteUser(id) {
-    const response = await axios.delete(`${URL}/users/${id}`);
+  const response = await axios.delete(`${URL}/users/${id}`);
 
-    return response
+  return response;
 }
 
-export async function loginUser(user){
-    const response = await axios.post(`${URL}/users/login`, user)
-    return response
-
+export async function loginUser(user) {
+  try {
+    const response = await axios.post(`${URL}/users/login`, user);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : new Error("Network Error");
+  }
 }
 
 export async function getBoards(userId) {
-    const response = await axios.get(`${URL}/users/${userId}/boards`);
+  const response = await axios.get(`${URL}/users/${userId}/boards`);
 
-    if(response.status === 200){
-        return response.data
-    }else{
-        return
-    }
+  if (response.status === 200) {
+    return response.data;
+  } else {
+    return;
+  }
 }
 
 export async function getBoard(boardId) {
-    const response = await axios.get(`${URL}/boards/${boardId}`);
+  const response = await axios.get(`${URL}/boards/${boardId}`);
 
-    if(response.status === 200){
-        return response.data
-    }else{
-        return
-    }
+  if (response.status === 200) {
+    return response.data;
+  } else {
+    return;
+  }
 }
 
 export async function createBoard(boardName, user) {
-    const response = await axios.post(`${URL}/boards/create/${boardName}`, user);
+  const response = await axios.post(`${URL}/boards/create/${boardName}`, user);
 
-    if(response.status === 200){
-        return response.data
-    }else{
-        return
-    }
+  if (response.status === 200) {
+    return response.data;
+  } else {
+    return;
+  }
 }
 
 export async function deleteBoard(boardId) {
-    const response = await axios.delete(`${URL}/boards/delete/${boardId}`);
+  const response = await axios.delete(`${URL}/boards/delete/${boardId}`);
 
-    if(response.status === 200){
-        return response.data
-    }else{
-        return
-    }
+  if (response.status === 200) {
+    return response.data;
+  } else {
+    return;
+  }
 }
 
-export async function getUserChats(user){
-    if(user?._id){
-        const response = await axios.get(`${URL}/chat/${user._id}`)
+export async function getUserChats(user) {
+  if (user?._id) {
+    const response = await axios.get(`${URL}/chat/${user._id}`);
 
-        if(response.status === 200){
-            return response.data
-        }else{
-            return response
-        }
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      return response;
     }
+  }
 }
 
-export async function createChat(firstId, secondId){
-    if(firstId && secondId){
-        const response = await axios.post(`${URL}/chat/create`, {firstId, secondId})
-        if(response.status === 200){
-            return response.data
-        }else{
-            return response.error
-        }
+export async function createChat(firstId, secondId) {
+  if (firstId && secondId) {
+    const response = await axios.post(`${URL}/chat/create`, {
+      firstId,
+      secondId,
+    });
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      return response.error;
     }
+  }
 }
 
-export async function getMessages(chat){
-    if(chat){
-        const response = await axios.get(`${URL}/message/${chat._id}`)
-        if(response.status === 200){
-            return response.data
-        }else{
-            return response
-        }
+export async function getMessages(chat) {
+  if (chat) {
+    const response = await axios.get(`${URL}/message/${chat._id}`);
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      return response;
     }
+  }
 }
 
-export async function createMessage(chatId, senderId, text){
-    const response = await axios.post(`${URL}/message/create`, {chatId, senderId, text})
-    if(response.status === 200){
-        return response.data
-    }else{
-        return response
-    }
+export async function createMessage(chatId, senderId, text) {
+  const response = await axios.post(`${URL}/message/create`, {
+    chatId,
+    senderId,
+    text,
+  });
+  if (response.status === 200) {
+    return response.data;
+  } else {
+    return response;
+  }
 }
 
-export async function createFriendReq(senderId, receiverId){
-    const response = await axios.post(`${URL}/friendReqs/create`, {senderId, receiverId})
-    if(response.status === 200){
-        return response.data
-    }else{
-        return response
-    }
+export async function createFriendReq(senderId, receiverId) {
+  const response = await axios.post(`${URL}/friendReqs/create`, {
+    senderId,
+    receiverId,
+  });
+  if (response.status === 200) {
+    return response.data;
+  } else {
+    return response;
+  }
 }
 
-export async function getFriendRequests(user){
-    const response = await axios.get(`${URL}/friendReqs/${user._id}`)
-    if(response.status === 200){
-        return response.data
-    }else{
-        return response
+export async function getFriendRequests(user) {
+  const response = await axios.get(`${URL}/friendReqs/${user._id}`);
+  if (response.status === 200) {
+    return response.data;
+  } else {
+    return response;
+  }
+}
+
+export async function removeFriendReq(request){
+    const response = await axios.delete(`${URL}/friendReqs/remove/${request.reqId}`);
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      return response;
     }
 }

@@ -1,29 +1,60 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../Panel.css";
 import SearchBar from "../SearchBar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { createChat } from "../../api";
 import useUserStore from "../../store/UserStore";
+import { fetchUserInfo } from "../../utils/userUtils";
+
+function PotentialChat({
+  friend,
+  selectedFriend,
+  setSelectedFriend,
+  setShowErr,
+}) {
+  const [userInfo, setUserInfo] = useState();
+  useEffect(() => {
+    async function getUserInfo() {
+      const response = await fetchUserInfo(friend);
+      setUserInfo(response);
+    }
+    getUserInfo();
+  }, []);
+
+  return (
+    <div
+      onClick={() => {
+        setSelectedFriend(friend);
+        setShowErr(false);
+      }}
+      key={friend}
+      className={`${
+        selectedFriend === friend ? " border-2 border-white border-solid" : ""
+      } flex flex-row p-2 px-4 cursor-pointer justify-between hover:bg-black rounded-md`}
+    >
+      <p>
+        {userInfo?.user?.name}
+        <sub className="ml-1 text-gray-200">#{userInfo?.formattedId}</sub>
+      </p>
+    </div>
+  );
+}
 
 function CreateChatModal({ filteredFriends, setShowPopup }) {
-  const [selectedFriend, setSelectedFriend] = useState({});
+  const [selectedFriend, setSelectedFriend] = useState();
   const [searchString, setSearchString] = useState("");
   const [showErr, setShowErr] = useState(false);
-  const {user} = useUserStore();
+  const { user } = useUserStore();
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (
-      Object.keys(selectedFriend).length === 0 ||
-      selectedFriend.name === null ||
-      selectedFriend.id === null
-    ) {
+    if (Object.keys(selectedFriend).length === 0 || selectedFriend === null) {
       setShowErr(true);
     } else {
-        const response = await createChat(user._id, selectedFriend.id)
-        console.log(response)
-    //   console.log(selectedFriend.name, selectedFriend.id);
+      const response = await createChat(user._id, selectedFriend);
+      console.log(response);
+      //   console.log(selectedFriend.name, selectedFriend.id);
       setShowPopup(false);
     }
   }
@@ -33,7 +64,7 @@ function CreateChatModal({ filteredFriends, setShowPopup }) {
       <SearchBar
         searchString={searchString}
         setSearchString={setSearchString}
-        placeholder={"Type the name of the friend"}
+        placeholder={"Type the id of the friend"}
       />
       {showErr && (
         <div className="w-full my-3 flex justify-center items-center gap-3 text-red-400">
@@ -46,36 +77,18 @@ function CreateChatModal({ filteredFriends, setShowPopup }) {
           {filteredFriends.map((filteredFriend) => {
             if (
               searchString &&
-              !(
-                filteredFriend.name
-                  .toLowerCase()
-                  .includes(searchString.toLowerCase()) ||
-                filteredFriend.id
-                  .toLowerCase()
-                  .includes(searchString.toLowerCase())
-              )
+              !filteredFriend.toLowerCase().includes(searchString.toLowerCase())
             ) {
               return null;
             }
-            let formattedId = filteredFriend.id.slice(-4);
             return (
-              <div
-                onClick={() => {
-                  setSelectedFriend(filteredFriend);
-                  setShowErr(false);
-                }}
-                key={filteredFriend.id}
-                className={`${
-                  selectedFriend.id === filteredFriend.id
-                    ? " border-2 border-white border-solid"
-                    : ""
-                } flex flex-row p-2 px-4 cursor-pointer justify-between hover:bg-black rounded-md`}
-              >
-                <p>
-                  {filteredFriend.name}
-                  <sub className="ml-1 text-gray-200">#{formattedId}</sub>
-                </p>
-              </div>
+              <PotentialChat
+                key={filteredFriend}
+                setSelectedFriend={setSelectedFriend}
+                selectedFriend={selectedFriend}
+                friend={filteredFriend}
+                setShowErr={setShowErr}
+              />
             );
           })}
         </div>

@@ -1,20 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import { Landing } from "../src/pages/Landing";
 import { Authentication } from "../src/pages/Authentication";
-import axios from "axios";
 import { Layout } from "./components/Layout";
 import { Home } from "./pages/Home";
 import { Profile } from "./pages/Profile";
 import BoardHome from "./components/BoardComponents/BoardHome";
+import auth from "./utils/auth";
 
 function App() {
   useEffect(() => {
-    let token = sessionStorage.getItem("User");
-    if (token) {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    }
+    auth.initializeToken();
   }, []);
 
   return (

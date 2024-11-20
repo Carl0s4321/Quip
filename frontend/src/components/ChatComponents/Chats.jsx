@@ -29,7 +29,7 @@ function Chats({ openPanel }) {
         setFilteredFriends(
           // returns friends who dont have a chat with the curr user yet
           friends.filter(
-            (friend) => !chats.some((chat) => chat.members.includes(friend.id))
+            (friend) => !chats.some((chat) => chat.members.includes(friend))
           )
         );
         setLoading(false);

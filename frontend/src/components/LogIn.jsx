@@ -1,7 +1,7 @@
 import { useState, useEffect} from "react";
 import { loginUser } from "../api";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import auth from "../utils/auth";
 
 export function LogIn() {
   const navigate = useNavigate();
@@ -15,20 +15,14 @@ export function LogIn() {
   async function handleSubmit(e) {
     setLoginErr(false);
     e.preventDefault();
-
-    try{
-      let response = await loginUser(user);
-      if(response.data.success){
-        sessionStorage.setItem("User", response.data.token);
-        axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`
-        navigate("/home");
-      } else{
-        setLoginErr(true);
-        setErrMsg(response.data.message);
-      }
-    } catch (error){
-      alert(error)
-      console.error(error)
+    try {
+      const response = await loginUser(user);
+      auth.setToken(response.token)
+      navigate("/home");
+    } catch (e) {
+      console.error('Error message:', e.message); 
+      setLoginErr(true);
+      setErrMsg(e.message);
     }
   }
 

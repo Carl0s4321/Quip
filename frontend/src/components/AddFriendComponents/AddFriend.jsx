@@ -14,16 +14,18 @@ function AddFriend({ setShowAddFriend, showAddFriend }) {
   });
 
   async function handleSubmit(e) {
-    console.log("here");
     e.preventDefault();
-    const response = await createFriendReq(user._id, addFriend);
-    console.log("RESPONSE", response);
-    if (response.error) {
-      console.error(response.data);
+    if (user._id != addFriend) {
+      const response = await createFriendReq(user._id, addFriend);
+      if (response.error) {
+        console.error(response.data);
+      } else {
+        console.log(response);
+      }
+      setAddFriend("");
     } else {
-      console.log(response);
+      console.log("cant add urself dummy!");
     }
-    setAddFriend("");
   }
 
   useEffect(() => {
@@ -40,46 +42,52 @@ function AddFriend({ setShowAddFriend, showAddFriend }) {
   }, [user]);
 
   return (
-    <>
-      <FontAwesomeIcon
-        className="cursor-pointer"
-        icon={faArrowLeft}
-        onClick={() => {
-          setShowAddFriend(!showAddFriend);
-        }}
-      />
-      <form onSubmit={handleSubmit}>
-        <p>Who would you like to add as a friend?</p>
-        <div className="border-2 w-fit rounded-md">
-          <input
-            placeholder="Enter an email or id"
-            className="pl-4 outline-none"
-            value={addFriend}
-            onChange={(e) => {
-              setAddFriend(e.target.value);
-            }}
-          />
-          <button
-            type="submit"
-            className="bg-lightBlue p-2 text-white hover:bg-darkBlue rounded-md"
-          >
-            Send Friend Request
-          </button>
-        </div>
-      </form>
-      <h1>Requests</h1>
+    <div className="w-3/4 h-full flex justify-center mt-20 items-center">
       <div>
-        <h2>Incoming ({requests.incomingReqs.length})</h2>
-        {requests.incomingReqs.map((incomingReq, index) => {
-          return <Request key={index} type="incoming" request={incomingReq} />;
-        })}
+        <FontAwesomeIcon
+          className="cursor-pointer"
+          icon={faArrowLeft}
+          onClick={() => {
+            setShowAddFriend(!showAddFriend);
+          }}
+        />
+        <form onSubmit={handleSubmit}>
+          <p>Who would you like to add as a friend?</p>
+          <div className="border-2 w-fit rounded-md">
+            <input
+              placeholder="Enter an id"
+              className="pl-4 outline-none"
+              value={addFriend}
+              onChange={(e) => {
+                setAddFriend(e.target.value);
+              }}
+            />
+            <button
+              type="submit"
+              className="bg-lightBlue p-2 text-white hover:bg-darkBlue rounded-md"
+            >
+              Send Friend Request
+            </button>
+          </div>
+        </form>
+        <h1>Requests</h1>
+        <div>
+          <h2>Incoming ({requests.incomingReqs.length})</h2>
+          {requests.incomingReqs.map((incomingReq, index) => {
+            return (
+              <Request key={index} type="incoming" request={incomingReq} />
+            );
+          })}
 
-        <h2>Outgoing ({requests.outgoingReqs.length})</h2>
-        {requests.outgoingReqs.map((outgoingReq, index) => {
-          return <Request key={index} type="outgoing" request={outgoingReq} />;
-        })}
+          <h2>Outgoing ({requests.outgoingReqs.length})</h2>
+          {requests.outgoingReqs.map((outgoingReq, index) => {
+            return (
+              <Request key={index} type="outgoing" request={outgoingReq} />
+            );
+          })}
+        </div>
       </div>
-    </>
+    </div>
   );
 }
 

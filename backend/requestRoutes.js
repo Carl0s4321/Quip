@@ -26,7 +26,7 @@ requestRoutes
         .find({ senderId: request.params.userId })
         .toArray();
 
-      console.log('incoming:', incomingReqs ,"\noutgoing:", outgoingReqs)
+      // console.log("incoming:", incomingReqs, "\noutgoing:", outgoingReqs);
 
       response.status(200).json({ incomingReqs, outgoingReqs });
     } catch (error) {
@@ -125,11 +125,21 @@ requestRoutes.route("/friendReqs/create").post(async (request, response) => {
 // })
 
 // delete one
-// requestRoutes.route('/users/:id').delete(verifyToken, async (request,response) => {
-//     let db = database.getDb();
-//     let data = await db.collection(REQUEST_COLLECTION_NAME).deleteOne({_id: new ObjectId(request.params.id)})
-//     response.json(data);
-// })
+requestRoutes
+  .route("/friendReqs/remove/:requestId")
+  .delete(verifyToken, async (request, response) => {
+    let db = database.getDb();
+    console.log(request.params.requestId)
+    try {
+      let data = await db
+        .collection(REQUEST_COLLECTION_NAME)
+        .deleteOne({ _id: new ObjectId(request.params.requestId) });
+      return response.status(200).json(data);
+    } catch (error) {
+      console.error(error.message);
+      return response.status(400).json(error);
+    }
+  });
 
 // if verified, go to next
 function verifyToken(request, response, next) {
